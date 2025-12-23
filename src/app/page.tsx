@@ -1,46 +1,52 @@
+import { authContract } from "@/modules/auth";
+import { ErrorCode } from "@/shared/base/error-code";
+import { initContract } from "@ts-rest/core";
+import { generateOpenApi } from "@ts-rest/open-api";
+
+import "swagger-ui-react/swagger-ui.css";
+
+import SwaggerUI from "swagger-ui-react";
+import z from "zod";
+
+const contract = initContract().router({
+  auth: {
+    login: {
+      method: "POST",
+      path: "/api/auth/login",
+      body: authContract.login,
+      responses: {
+        200: z.object({ accessToken: z.string(), refreshToken: z.string() }),
+        401: z.enum([ErrorCode.InvalidCredentials]),
+      },
+    },
+    register: {
+      method: "POST",
+      path: "/api/auth/register",
+      body: authContract.register,
+      responses: {
+        200: z.object({ accessToken: z.string(), refreshToken: z.string() }),
+        400: z.enum([ErrorCode.AlreadyExists]),
+      },
+    },
+    refresh: {
+      method: "POST",
+      path: "/api/auth/refresh",
+      body: authContract.refresh,
+      responses: {
+        200: z.object({ accessToken: z.string(), refreshToken: z.string() }),
+        401: z.enum([ErrorCode.Unauthorized]),
+      },
+    },
+  },
+});
+
+const openApiDocument = generateOpenApi(contract, {
+  info: {
+    title: "Auth API",
+    version: "1.0.0",
+  },
+});
+
 export default function Home() {
-  return (
-    <div>
-      <main>
-        <div>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div>
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Deploy Now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+  return <SwaggerUI spec={openApiDocument} />;
 }

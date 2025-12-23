@@ -8,8 +8,11 @@ import { AuthService } from "./auth.service";
 
 import z from "zod";
 
-const loginSchema = z.object({ email: z.string(), password: z.string() });
-const refreshSchema = z.object({ refreshToken: z.string() });
+export const authContract = {
+  login: z.object({ email: z.string(), password: z.string() }),
+  register: z.object({ email: z.string(), password: z.string() }),
+  refresh: z.object({ refreshToken: z.string() }),
+};
 
 export const AuthController = controllerDecorator(
   class AuthController extends BaseController {
@@ -23,7 +26,7 @@ export const AuthController = controllerDecorator(
       const tokens = await this.authService.register(user);
 
       return new BaseResponse(tokens, { status: 200 });
-    }, loginSchema);
+    }, authContract.register);
 
     login = validateBody(async (req) => {
       const { email, password } = await req.json();
@@ -31,7 +34,7 @@ export const AuthController = controllerDecorator(
       const tokens = await this.authService.login({ email, password });
 
       return new BaseResponse(tokens, { status: 200 });
-    }, loginSchema);
+    }, authContract.login);
 
     refresh = validateBody(async (req) => {
       const { refreshToken } = await req.json();
@@ -39,6 +42,6 @@ export const AuthController = controllerDecorator(
       const tokens = await this.authService.refresh(refreshToken);
 
       return new BaseResponse(tokens, { status: 200 });
-    }, refreshSchema);
+    }, authContract.refresh);
   }
 );

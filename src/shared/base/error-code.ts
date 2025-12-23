@@ -1,6 +1,6 @@
 export enum ErrorCode {
-  AlreadyExists = 1,
-  InvalidCredentials = 2,
-  Unauthorized = 3,
-  NotFound = 4,
+  AlreadyExists = "AlreadyExists",
+  InvalidCredentials = "InvalidCredentials",
+  Unauthorized = "Unauthorized",
+  NotFound = "NotFound",
 }
