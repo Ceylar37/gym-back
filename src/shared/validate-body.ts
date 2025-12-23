@@ -8,12 +8,21 @@ export const validateBody = <T extends ZodSchema>(
 ) => {
   return async (req: Request) => {
     const clone = req.clone();
-    const body = await clone.json();
-
-    const { success, error } = schema.safeParse(body);
-    if (!success) {
+    try {
+      const body = await clone.json();
+      const { success, error } = schema.safeParse(body);
+      if (!success) {
+        return new Response(
+          `${error.issues[0].path}: ${error.issues[0].message}`,
+          { status: 400 }
+        );
+      }
+      return cb(req);
+    } catch (error: unknown) {
+      if (error && typeof error === "object" && "message" in error) {
+        return new Response(JSON.stringify(error.message), { status: 400 });
+      }
       return new Response(JSON.stringify(error), { status: 400 });
     }
-    return cb(req);
   };
 };
