@@ -1,4 +1,5 @@
 import { authContract } from "@/modules/auth";
+import { exerciseTypeContract } from "@/modules/exercise-type/exercise-type.model";
 import { ErrorCode } from "@/shared/base/error-code";
 import { initContract } from "@ts-rest/core";
 import { generateOpenApi } from "@ts-rest/open-api";
@@ -35,6 +36,89 @@ const contract = initContract().router({
       responses: {
         200: z.object({ accessToken: z.string(), refreshToken: z.string() }),
         401: z.enum([ErrorCode.Unauthorized]),
+      },
+    },
+  },
+  "exercise-type": {
+    create: {
+      method: "POST",
+      path: "/api/exercise-type",
+      body: exerciseTypeContract.create.body,
+      responses: {
+        200: z.object({
+          id: z.string(),
+          name: z.string(),
+          favorite: z.boolean(),
+          description: z.string(),
+          restTime: z.number(),
+          muscleGroups: z.array(z.string()),
+        }),
+        422: z.string(),
+      },
+    },
+    read: {
+      method: "GET",
+      path: "/api/exercise-type",
+      responses: {
+        200: z.object({
+          content: z.array(
+            z.object({
+              id: z.string(),
+              name: z.string(),
+              favorite: z.boolean(),
+              description: z.string(),
+              restTime: z.number(),
+              muscleGroups: z.array(z.string()),
+            })
+          ),
+          meta: z.object({
+            page: z.number(),
+            size: z.number(),
+            limit: z.number(),
+          }),
+        }),
+      },
+    },
+    readOne: {
+      method: "GET",
+      path: "/api/exercise-type/:id",
+      pathParams: z.object({ id: z.string() }),
+      responses: {
+        200: z.object({
+          id: z.string(),
+          name: z.string(),
+          favorite: z.boolean(),
+          description: z.string(),
+          restTime: z.number(),
+          muscleGroups: z.array(z.string()),
+        }),
+        404: z.enum([ErrorCode.NotFound]),
+      },
+    },
+    update: {
+      method: "PUT",
+      path: "/api/exercise-type",
+      body: exerciseTypeContract.update.body,
+      responses: {
+        200: z.object({
+          id: z.string(),
+          name: z.string(),
+          favorite: z.boolean(),
+          description: z.string(),
+          restTime: z.number(),
+          muscleGroups: z.array(z.string()),
+        }),
+        422: z.string(),
+      },
+    },
+    delete: {
+      method: "DELETE",
+      path: "/api/exercise-type/:id",
+      pathParams: z.object({ id: z.string() }),
+      responses: {
+        200: z.object({ id: z.string() }),
+        404: z.enum([ErrorCode.NotFound]),
+        422: z.string(),
       },
     },
   },

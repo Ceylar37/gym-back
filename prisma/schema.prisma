@@ -19,6 +19,16 @@ model User {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   email             String 
   password          String
-  accessTokens      String[]
-  refreshTokens     String[]
+  accessTokens      String[] @default([])
+  refreshTokens     String[] @default([])
+}
+
+model ExerciseType {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  favorite          Boolean  @default(false)
+  description       String   @default("")
+  muscleGroups      String[] @default([])
+  restTime          Int      @default(60)
+  userId            String
 }

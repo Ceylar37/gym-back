@@ -9,4 +9,4 @@ const userService = new UserService(prisma.user);
 const authService = new AuthService(userService);
 
 export const auth = new AuthController(authService);
-export { authContract } from "./auth.controller";
+export { authContract } from "./auth.contract";

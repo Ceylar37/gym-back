@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { BaseResponse } from "@/types/base-response";
-
 import { BaseController } from "./base.controller";
 import { BaseError } from "./base-error";
+
+import { NextResponse } from "next/server";
 
 export function controllerDecorator<
   T extends { new (...args: any[]): BaseController }
@@ -32,15 +32,21 @@ export function controllerDecorator<
               return await originalMethod.apply(this, args);
             } catch (error) {
               if (error instanceof BaseError) {
-                return new BaseResponse(error.message, {
+                return NextResponse.json(error.message, {
                   status: error.status,
                 });
               }
               throw error;
             }
           };
+          (this as any)[key] = (this as any)[key].bind(this);
         }
       });
     }
   } as T;
 }
+
+// TODO: поправить встроенные методы
+// {
+//   function() {}
+// }

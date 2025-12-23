@@ -3,4 +3,5 @@ export enum ErrorCode {
   InvalidCredentials = "InvalidCredentials",
   Unauthorized = "Unauthorized",
   NotFound = "NotFound",
+  NotUrlIdProvided = "NotUrlIdProvided",
 }
