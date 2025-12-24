@@ -15,29 +15,29 @@ export const AuthController = controllerDecorator(
       super();
     }
 
-    register = withBody(async (req) => {
+    register = withBody(authContract.register, async (req) => {
       const user = await req.json();
 
       const tokens = await this.authService.register(user);
 
       return NextResponse.json(tokens);
-    }, authContract.register);
+    });
 
-    login = withBody(async (req) => {
+    login = withBody(authContract.login, async (req) => {
       const { email, password } = await req.json();
 
       const tokens = await this.authService.login({ email, password });
 
       return NextResponse.json(tokens);
-    }, authContract.login);
+    });
 
-    refresh = withBody(async (req) => {
+    refresh = withBody(authContract.refresh, async (req) => {
       const { refreshToken } = await req.json();
 
       const tokens = await this.authService.refresh(refreshToken);
 
       return NextResponse.json(tokens);
-    }, authContract.refresh);
+    });
 
     profile = withAuth(async (req, user) => {
       const userData = {

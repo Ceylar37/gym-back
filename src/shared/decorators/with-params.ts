@@ -3,11 +3,11 @@ import { RequestWithBody } from "@/types/request-with-body";
 import z, { ZodSchema } from "zod";
 
 export const withParams = <T extends ZodSchema>(
+  schema: T,
   cb: (
     req: RequestWithBody<z.infer<T>>,
     ...restArgs: unknown[]
-  ) => Promise<Response>,
-  schema: T
+  ) => Promise<Response>
 ) => {
   return async (req: Request, ...restArgs: unknown[]) => {
     try {

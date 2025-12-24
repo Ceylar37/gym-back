@@ -7,11 +7,8 @@ export const withBody = <
   T extends ZodSchema,
   Args extends unknown[] = unknown[]
 >(
-  cb: (
-    req: RequestWithBody<z.infer<T>>,
-    ...restArgs: Args
-  ) => Promise<Response>,
-  schema: T
+  schema: T,
+  cb: (req: RequestWithBody<z.infer<T>>, ...restArgs: Args) => Promise<Response>
 ) => {
   return async (req: Request, ...restArgs: Args) => {
     const clone = req.clone();
