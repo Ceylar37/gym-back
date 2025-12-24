@@ -1,6 +1,6 @@
 import { User } from "@/generated/prisma/client";
 import { UserService } from "@/modules/user/user.service";
-import prisma from "@/shared/prisma";
+import prisma from "@/shared/domain/prisma";
 
 import { BaseError } from "../base/base-error";
 import { ErrorCode } from "../base/error-code";

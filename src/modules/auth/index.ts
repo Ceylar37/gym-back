@@ -1,4 +1,4 @@
-import prisma from "@/shared/prisma";
+import prisma from "@/shared/domain/prisma";
 
 import { UserService } from "../user/user.service";
 

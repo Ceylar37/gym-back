@@ -1,4 +1,4 @@
-import prisma from "@/shared/prisma";
+import prisma from "@/shared/domain/prisma";
 
 import { ExerciseTypeController } from "./exercise-type.controller";
 import { ExerciseTypeService } from "./exercise-type.service";

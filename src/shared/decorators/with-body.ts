@@ -3,11 +3,17 @@ import { RequestWithBody } from "@/types/request-with-body";
 import { NextResponse } from "next/server";
 import z, { ZodSchema } from "zod";
 
-export const withBody = <T extends ZodSchema>(
-  cb: (req: RequestWithBody<z.infer<T>>) => Promise<Response>,
+export const withBody = <
+  T extends ZodSchema,
+  Args extends unknown[] = unknown[]
+>(
+  cb: (
+    req: RequestWithBody<z.infer<T>>,
+    ...restArgs: Args
+  ) => Promise<Response>,
   schema: T
 ) => {
-  return async (req: Request) => {
+  return async (req: Request, ...restArgs: Args) => {
     const clone = req.clone();
     try {
       const body = await clone.json();
@@ -18,7 +24,7 @@ export const withBody = <T extends ZodSchema>(
           { status: 422 }
         );
       }
-      return cb(req);
+      return cb(req, ...restArgs);
     } catch (error: unknown) {
       if (error && typeof error === "object" && "message" in error) {
         return new NextResponse(JSON.stringify(error.message), { status: 422 });

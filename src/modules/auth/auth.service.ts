@@ -3,7 +3,7 @@ import { CreateUserDto, LoginUserDto } from "@/modules/user/user.type";
 import { BaseService } from "@/shared/base/base.service";
 import { BaseError } from "@/shared/base/base-error";
 import { ErrorCode } from "@/shared/base/error-code";
-import { compare } from "@/shared/bcrypt";
+import { compare } from "@/shared/domain/bcrypt";
 
 export class AuthService extends BaseService {
   constructor(private userService: UserService) {

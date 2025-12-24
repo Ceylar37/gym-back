@@ -1,8 +1,8 @@
-import { withAuth } from "../decorators/with-auth";
 import { BaseController } from "../base/base.controller";
 import { BaseError } from "../base/base-error";
 import { controllerDecorator } from "../base/controller-decorator";
 import { ErrorCode } from "../base/error-code";
+import { withAuth } from "../decorators/with-auth";
 import { withBody } from "../decorators/with-body";
 
 import { CrudContract, CrudModel } from "./crud.model";
@@ -26,14 +26,13 @@ export const CrudController = controllerDecorator(
       super();
     }
 
-    create = withBody(
-      withAuth(async (req, user) => {
+    create = withAuth(
+      withBody(async (req, user) => {
         const body = await req.json();
         return NextResponse.json(
           await this.service.create({ ...body, userId: user.id })
         );
-      }),
-      this.crudContract.create.body
+      }, this.crudContract.create.body)
     );
 
     read = withAuth(async (req, user) => {

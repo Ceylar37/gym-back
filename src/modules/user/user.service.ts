@@ -1,8 +1,8 @@
 import { User } from "@/generated/prisma/client";
 import { ErrorCode } from "@/shared/base/error-code";
-import { hash } from "@/shared/bcrypt";
-import { sign, verify } from "@/shared/jwt";
-import prisma from "@/shared/prisma";
+import { hash } from "@/shared/domain/bcrypt";
+import { sign, verify } from "@/shared/domain/jwt";
+import prisma from "@/shared/domain/prisma";
 
 import { BaseService } from "../../shared/base/base.service";
 import { BaseError } from "../../shared/base/base-error";

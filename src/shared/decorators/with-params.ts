@@ -3,13 +3,15 @@ import { RequestWithBody } from "@/types/request-with-body";
 import z, { ZodSchema } from "zod";
 
 export const withParams = <T extends ZodSchema>(
-  cb: (req: RequestWithBody<z.infer<T>>) => Promise<Response>,
+  cb: (
+    req: RequestWithBody<z.infer<T>>,
+    ...restArgs: unknown[]
+  ) => Promise<Response>,
   schema: T
 ) => {
-  return async (req: Request) => {
-    const clone = req.clone();
+  return async (req: Request, ...restArgs: unknown[]) => {
     try {
-      const params = new URL(clone.url).searchParams;
+      const params = new URL(req.url).searchParams;
 
       const { success, error } = schema.safeParse(params);
       if (!success) {
@@ -18,7 +20,7 @@ export const withParams = <T extends ZodSchema>(
           { status: 400 }
         );
       }
-      return cb(req);
+      return cb(req, ...restArgs);
     } catch (error: unknown) {
       if (error && typeof error === "object" && "message" in error) {
         return new Response(JSON.stringify(error.message), { status: 400 });
