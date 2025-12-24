@@ -4,6 +4,8 @@ import { ErrorCode } from "@/shared/base/error-code";
 import { initContract } from "@ts-rest/core";
 import { generateOpenApi } from "@ts-rest/open-api";
 
+import packageJson from "../../package.json";
+
 import "swagger-ui-react/swagger-ui.css";
 
 import SwaggerUI from "swagger-ui-react";
@@ -138,7 +140,7 @@ const contract = initContract().router({
 const openApiDocument = generateOpenApi(contract, {
   info: {
     title: "Auth API",
-    version: "1.0.0",
+    version: packageJson.version,
   },
 });
 
