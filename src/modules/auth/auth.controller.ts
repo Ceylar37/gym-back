@@ -1,5 +1,5 @@
-import { authGuard } from "@/shared/auth-guard";
-import { validateBody } from "@/shared/validate-body";
+import { withAuth } from "@/shared/decorators/with-auth";
+import { withBody } from "@/shared/decorators/with-body";
 
 import { BaseController } from "../../shared/base/base.controller";
 import { controllerDecorator } from "../../shared/base/controller-decorator";
@@ -15,7 +15,7 @@ export const AuthController = controllerDecorator(
       super();
     }
 
-    register = validateBody(async (req) => {
+    register = withBody(async (req) => {
       const user = await req.json();
 
       const tokens = await this.authService.register(user);
@@ -23,7 +23,7 @@ export const AuthController = controllerDecorator(
       return NextResponse.json(tokens);
     }, authContract.register);
 
-    login = validateBody(async (req) => {
+    login = withBody(async (req) => {
       const { email, password } = await req.json();
 
       const tokens = await this.authService.login({ email, password });
@@ -31,7 +31,7 @@ export const AuthController = controllerDecorator(
       return NextResponse.json(tokens);
     }, authContract.login);
 
-    refresh = validateBody(async (req) => {
+    refresh = withBody(async (req) => {
       const { refreshToken } = await req.json();
 
       const tokens = await this.authService.refresh(refreshToken);
@@ -39,7 +39,7 @@ export const AuthController = controllerDecorator(
       return NextResponse.json(tokens);
     }, authContract.refresh);
 
-    profile = authGuard(async (req, user) => {
+    profile = withAuth(async (req, user) => {
       const userData = {
         id: user.id,
         email: user.email,

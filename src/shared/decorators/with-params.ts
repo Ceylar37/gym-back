@@ -2,7 +2,7 @@ import { RequestWithBody } from "@/types/request-with-body";
 
 import z, { ZodSchema } from "zod";
 
-export const validateParams = <T extends ZodSchema>(
+export const withParams = <T extends ZodSchema>(
   cb: (req: RequestWithBody<z.infer<T>>) => Promise<Response>,
   schema: T
 ) => {

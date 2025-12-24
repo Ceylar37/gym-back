@@ -1,9 +1,9 @@
-import { authGuard } from "../auth-guard";
+import { withAuth } from "../decorators/with-auth";
 import { BaseController } from "../base/base.controller";
 import { BaseError } from "../base/base-error";
 import { controllerDecorator } from "../base/controller-decorator";
 import { ErrorCode } from "../base/error-code";
-import { validateBody } from "../validate-body";
+import { withBody } from "../decorators/with-body";
 
 import { CrudContract, CrudModel } from "./crud.model";
 
@@ -26,8 +26,8 @@ export const CrudController = controllerDecorator(
       super();
     }
 
-    create = validateBody(
-      authGuard(async (req, user) => {
+    create = withBody(
+      withAuth(async (req, user) => {
         const body = await req.json();
         return NextResponse.json(
           await this.service.create({ ...body, userId: user.id })
@@ -36,7 +36,7 @@ export const CrudController = controllerDecorator(
       this.crudContract.create.body
     );
 
-    read = authGuard(async (req, user) => {
+    read = withAuth(async (req, user) => {
       return NextResponse.json({
         content: await this.service.read(user.id),
         meta: {
@@ -47,7 +47,7 @@ export const CrudController = controllerDecorator(
       });
     });
 
-    readOne = authGuard(async (req) => {
+    readOne = withAuth(async (req) => {
       const id = req.url.split("/").pop();
       if (!id) {
         throw new BaseError(ErrorCode.NotUrlIdProvided, 422);
@@ -55,15 +55,15 @@ export const CrudController = controllerDecorator(
       return NextResponse.json(await this.service.readOne(id));
     });
 
-    update = validateBody(
-      authGuard(async (req) => {
+    update = withBody(
+      withAuth(async (req) => {
         const body = await req.json();
         return NextResponse.json(await this.service.update(body));
       }),
       this.crudContract.update.body
     );
 
-    delete = authGuard(async (req) => {
+    delete = withAuth(async (req) => {
       const id = req.url.split("/").pop();
       if (!id) {
         throw new BaseError(ErrorCode.NotUrlIdProvided, 422);

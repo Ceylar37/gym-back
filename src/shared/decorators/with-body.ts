@@ -3,7 +3,7 @@ import { RequestWithBody } from "@/types/request-with-body";
 import { NextResponse } from "next/server";
 import z, { ZodSchema } from "zod";
 
-export const validateBody = <T extends ZodSchema>(
+export const withBody = <T extends ZodSchema>(
   cb: (req: RequestWithBody<z.infer<T>>) => Promise<Response>,
   schema: T
 ) => {

@@ -2,10 +2,10 @@ import { User } from "@/generated/prisma/client";
 import { UserService } from "@/modules/user/user.service";
 import prisma from "@/shared/prisma";
 
-import { BaseError } from "./base/base-error";
-import { ErrorCode } from "./base/error-code";
+import { BaseError } from "../base/base-error";
+import { ErrorCode } from "../base/error-code";
 
-export const authGuard = <T extends Request>(
+export const withAuth = <T extends Request>(
   cb: (req: T, user: User) => Promise<Response>
 ) => {
   return async (req: T) => {
