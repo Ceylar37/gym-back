@@ -26,14 +26,12 @@ export const CrudController = controllerDecorator(
       super();
     }
 
-    create = withAuth(
-      withBody(this.crudContract.create.body, async (req, user) => {
-        const body = await req.json();
-        return NextResponse.json(
-          await this.service.create({ ...body, userId: user.id })
-        );
-      })
-    );
+    create = withAuth(async (req: Request, user) => {
+      const body = await req.json();
+      return NextResponse.json(
+        await this.service.create({ ...body, userId: user.id })
+      );
+    });
 
     read = withAuth(async (req, user) => {
       return NextResponse.json({
@@ -54,9 +52,8 @@ export const CrudController = controllerDecorator(
       return NextResponse.json(await this.service.readOne(id));
     });
 
-    update = withBody(
-      this.crudContract.update.body,
-      withAuth(async (req) => {
+    update = withAuth(
+      withBody(this.crudContract.update.body)(async (req) => {
         const body = await req.json();
         return NextResponse.json(await this.service.update(body));
       })
