@@ -38,6 +38,17 @@ const contract = initContract().router({
         401: z.enum([ErrorCode.Unauthorized]),
       },
     },
+    profile: {
+      method: "GET",
+      path: "/api/auth/profile",
+      responses: {
+        200: z.object({
+          id: z.string(),
+          email: z.string(),
+        }),
+        401: z.enum([ErrorCode.Unauthorized]),
+      },
+    },
   },
   "exercise-type": {
     create: {
