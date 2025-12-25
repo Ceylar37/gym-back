@@ -1,4 +1,4 @@
-import { exerciseType } from "@/modules/exercise-type";
+import exerciseType from "@/modules/exercise-type";
 
-export const GET = exerciseType.readOne;
-export const DELETE = exerciseType.delete;
+export const GET = exerciseType.controller.readOne;
+export const DELETE = exerciseType.controller.delete;

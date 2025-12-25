@@ -1,3 +1,3 @@
-import { auth } from "@/modules/auth";
+import auth from "@/modules/auth";
 
-export const POST = auth.refresh;
+export const POST = auth.controller.refresh;

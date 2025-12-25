@@ -5,35 +5,37 @@ import { ErrorCode } from "../base/error-code";
 import { withAuth } from "../decorators/with-auth";
 import { withBody } from "../decorators/with-body";
 
-import { CrudContract, CrudModel } from "./crud.model";
+import { UserCrudContract, UserCrudModel } from "./user-crud.model";
 
 import { NextResponse } from "next/server";
 
-export interface CrudService<T extends CrudModel> {
+export interface UserCrudService<T extends UserCrudModel> {
   create: (data: T["createArgs"]) => Promise<T["base"]>;
-  read: () => Promise<T["base"][]>;
+  read: (userId: string) => Promise<T["base"][]>;
   readOne: (id: string) => Promise<T["base"]>;
   update: (data: T["updateArgs"]) => Promise<T["base"]>;
   delete: (id: string) => Promise<void>;
 }
 
-export const CrudController = controllerDecorator(
-  class CrudController<T extends CrudModel> extends BaseController {
+export const UserCrudController = controllerDecorator(
+  class UserCrudController<T extends UserCrudModel> extends BaseController {
     constructor(
-      private readonly service: CrudService<T>,
-      private readonly crudContract: CrudContract
+      private readonly service: UserCrudService<T>,
+      private readonly userCrudContract: UserCrudContract
     ) {
       super();
     }
 
-    create = withAuth(async (req: Request) => {
+    create = withAuth(async (req: Request, user) => {
       const body = await req.json();
-      return NextResponse.json(await this.service.create(body));
+      return NextResponse.json(
+        await this.service.create({ ...body, userId: user.id })
+      );
     });
 
-    read = withAuth(async () => {
+    read = withAuth(async (req, user) => {
       return NextResponse.json({
-        content: await this.service.read(),
+        content: await this.service.read(user.id),
         meta: {
           limit: 25,
           page: 1,
@@ -51,7 +53,7 @@ export const CrudController = controllerDecorator(
     });
 
     update = withAuth(
-      withBody(this.crudContract.update.body)(async (req) => {
+      withBody(this.userCrudContract.update.body)(async (req) => {
         const body = await req.json();
         return NextResponse.json(await this.service.update(body));
       })

@@ -2,11 +2,22 @@ import { BaseService } from "@/shared/base/base.service";
 import { BaseError } from "@/shared/base/base-error";
 import { ErrorCode } from "@/shared/base/error-code";
 
+import { UserService } from "../user/user.service";
+
 import { ExerciseTypeModel } from "./exercise-type.model";
 
 export class ExerciseTypeService extends BaseService {
-  constructor(private readonly exerciseTypeModel: typeof prisma.exerciseType) {
+  constructor(
+    private readonly exerciseTypeModel: typeof prisma.exerciseType,
+    private readonly userService: UserService
+  ) {
     super();
+  }
+
+  async create(data: ExerciseTypeModel["createArgs"]) {
+    return await this.exerciseTypeModel.create({
+      data,
+    });
   }
 
   async read(userId: string) {
@@ -25,12 +36,6 @@ export class ExerciseTypeService extends BaseService {
       throw new BaseError(ErrorCode.NotFound, 404);
     }
     return exerciseType;
-  }
-
-  async create(data: ExerciseTypeModel["createArgs"]) {
-    return await this.exerciseTypeModel.create({
-      data,
-    });
   }
 
   async update({ id, ...data }: ExerciseTypeModel["updateArgs"]) {

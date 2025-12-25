@@ -1,5 +1,5 @@
-import { exerciseType } from "@/modules/exercise-type";
+import exerciseType from "@/modules/exercise-type";
 
-export const GET = exerciseType.read;
-export const POST = exerciseType.create;
-export const PATCH = exerciseType.update;
+export const GET = exerciseType.controller.read;
+export const POST = exerciseType.controller.create;
+export const PATCH = exerciseType.controller.update;

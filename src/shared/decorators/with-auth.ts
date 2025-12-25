@@ -1,6 +1,5 @@
 import { User } from "@/generated/prisma/client";
-import { UserService } from "@/modules/user/user.service";
-import prisma from "@/shared/domain/prisma";
+import user from "@/modules/user";
 
 import { BaseError } from "../base/base-error";
 import { ErrorCode } from "../base/error-code";
@@ -19,9 +18,7 @@ export const withAuth = <T extends Request>(
       throw new BaseError(ErrorCode.Unauthorized, 401);
     }
     // try {
-    const userFromDb = await new UserService(
-      prisma.user
-    ).verifyUserByAccessToken(token);
+    const userFromDb = await user.service.verifyUserByAccessToken(token);
     return cb(req, userFromDb);
     // } catch (error) {
     //   console.log(error);

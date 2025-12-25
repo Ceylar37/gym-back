@@ -16,7 +16,7 @@ const contract = initContract().router({
     login: {
       method: "POST",
       path: "/api/auth/login",
-      body: authContract.login,
+      body: authContract.login.body,
       responses: {
         200: z.object({ accessToken: z.string(), refreshToken: z.string() }),
         401: z.enum([ErrorCode.InvalidCredentials]),
@@ -25,7 +25,7 @@ const contract = initContract().router({
     register: {
       method: "POST",
       path: "/api/auth/register",
-      body: authContract.register,
+      body: authContract.register.body,
       responses: {
         200: z.object({ accessToken: z.string(), refreshToken: z.string() }),
         400: z.enum([ErrorCode.AlreadyExists]),
@@ -34,7 +34,7 @@ const contract = initContract().router({
     refresh: {
       method: "POST",
       path: "/api/auth/refresh",
-      body: authContract.refresh,
+      body: authContract.refresh.body,
       responses: {
         200: z.object({ accessToken: z.string(), refreshToken: z.string() }),
         401: z.enum([ErrorCode.Unauthorized]),

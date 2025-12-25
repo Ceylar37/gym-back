@@ -1,5 +1,5 @@
 import { UserService } from "@/modules/user/user.service";
-import { CreateUserDto, LoginUserDto } from "@/modules/user/user.type";
+import { CreateUserArgs, LoginUserArgs } from "@/modules/user/user.model";
 import { BaseService } from "@/shared/base/base.service";
 import { BaseError } from "@/shared/base/base-error";
 import { ErrorCode } from "@/shared/base/error-code";
@@ -10,7 +10,7 @@ export class AuthService extends BaseService {
     super();
   }
 
-  async register({ email, password }: CreateUserDto) {
+  async register({ email, password }: CreateUserArgs) {
     const user = await this.userService.findByEmail(email);
 
     if (user) {
@@ -37,7 +37,7 @@ export class AuthService extends BaseService {
     };
   }
 
-  async login({ email, password }: LoginUserDto) {
+  async login({ email, password }: LoginUserArgs) {
     const user = await this.userService.findByEmail(email);
 
     if (!user) {

@@ -1,4 +1,5 @@
 import { ExerciseType, Prisma } from "@/generated/prisma";
+import { CreateUserCrudModel } from "@/shared/user-crud/user-crud.model";
 
 import { z } from "zod";
 
@@ -24,8 +25,8 @@ export const exerciseTypeContract = {
   },
 };
 
-export interface ExerciseTypeModel {
+export type ExerciseTypeModel = CreateUserCrudModel<{
   base: ExerciseType;
-  createArgs: Prisma.ExerciseTypeCreateArgs["data"];
-  updateArgs: Prisma.ExerciseTypeUpdateArgs["data"] & { id: string };
-}
+  createArgs: Prisma.ExerciseTypeUncheckedCreateInput;
+  updateArgs: Prisma.ExerciseTypeUncheckedUpdateInput;
+}>;

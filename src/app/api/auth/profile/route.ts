@@ -1,3 +1,3 @@
-import { auth } from "@/modules/auth";
+import auth from "@/modules/auth";
 
-export const GET = auth.profile;
+export const GET = auth.controller.profile;

@@ -8,10 +8,11 @@ import { BaseService } from "../../shared/base/base.service";
 import { BaseError } from "../../shared/base/base-error";
 
 import {
-  CreateUserDto,
-  RemoveRefreshTokenDto,
-  UpdateUserTokenDto,
-} from "./user.type";
+  CreateUserArgs,
+  RemoveRefreshTokenArgs,
+  UpdateUserTokenArgs,
+  UserModel,
+} from "./user.model";
 
 import z from "zod";
 
@@ -47,7 +48,7 @@ export class UserService extends BaseService {
     super();
   }
 
-  async createAccessToken(payload: UpdateUserTokenDto) {
+  async createAccessToken(payload: UpdateUserTokenArgs) {
     const token = sign(payload, PRIVATE_KEYS[Token.Access], {
       expiresIn: LIFE_TIMES[Token.Access],
     });
@@ -65,7 +66,7 @@ export class UserService extends BaseService {
     return token;
   }
 
-  async createRefreshToken(payload: UpdateUserTokenDto) {
+  async createRefreshToken(payload: UpdateUserTokenArgs) {
     const token = sign(payload, PRIVATE_KEYS[Token.Refresh], {
       expiresIn: LIFE_TIMES[Token.Refresh],
     });
@@ -110,7 +111,7 @@ export class UserService extends BaseService {
     });
   }
 
-  async create(user: CreateUserDto) {
+  async create(user: CreateUserArgs) {
     const userData = {
       ...user,
     };
@@ -206,7 +207,7 @@ export class UserService extends BaseService {
     return { accessToken: newAccessToken, refreshToken: newRefreshToken };
   }
 
-  async removeRefreshToken({ id, refreshToken }: RemoveRefreshTokenDto) {
+  async removeRefreshToken({ id, refreshToken }: RemoveRefreshTokenArgs) {
     const user = await this.userModel.findUnique({
       where: {
         id,
@@ -229,6 +230,15 @@ export class UserService extends BaseService {
           (token) => token !== refreshToken
         ),
       },
+    });
+  }
+
+  async update({ id, ...data }: UserModel["updateArgs"]) {
+    return await this.userModel.update({
+      where: {
+        id,
+      },
+      data,
     });
   }
 }

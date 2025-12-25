@@ -21,6 +21,7 @@ model User {
   password          String
   accessTokens      String[] @default([])
   refreshTokens     String[] @default([])
+  exerciseTypes     ExerciseType[]
 }
 
 model ExerciseType {
@@ -30,5 +31,6 @@ model ExerciseType {
   description       String   @default("")
   muscleGroups      String[] @default([])
   restTime          Int      @default(60)
-  userId            String
+  userId            String   @db.ObjectId
+  user              User     @relation(fields: [userId], references: [id])
 }

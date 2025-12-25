@@ -1,12 +1,14 @@
-import prisma from "@/shared/domain/prisma";
-
-import { UserService } from "../user/user.service";
+import user from "@/modules/user";
 
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 
-const userService = new UserService(prisma.user);
-const authService = new AuthService(userService);
+const authService = new AuthService(user.service);
+const authController = new AuthController(authService);
+const auth = {
+  service: authService,
+  controller: authController,
+};
 
-export const auth = new AuthController(authService);
-export { authContract } from "./auth.contract";
+export default auth;
+export { authContract } from "./auth.model";
