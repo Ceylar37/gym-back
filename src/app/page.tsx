@@ -11,6 +11,12 @@ import "swagger-ui-react/swagger-ui.css";
 import SwaggerUI from "swagger-ui-react";
 import z from "zod";
 
+const MetaSchema = z.object({
+  limit: z.number().optional(),
+  page: z.number().optional(),
+  pages: z.number().optional(),
+});
+
 const contract = initContract().router({
   auth: {
     login: {
@@ -84,11 +90,7 @@ const contract = initContract().router({
               muscleGroups: z.array(z.string()),
             })
           ),
-          meta: z.object({
-            page: z.number(),
-            size: z.number(),
-            limit: z.number(),
-          }),
+          meta: MetaSchema,
         }),
       },
     },

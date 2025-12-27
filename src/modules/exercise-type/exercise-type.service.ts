@@ -46,7 +46,7 @@ export class ExerciseTypeService extends BaseService {
       meta: {
         limit,
         page,
-        pages: Math.ceil(count / (limit || 25)),
+        pages: page && limit ? Math.ceil(count / limit) : undefined,
       },
     };
   }
