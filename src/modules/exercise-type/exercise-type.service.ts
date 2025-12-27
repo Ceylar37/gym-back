@@ -1,12 +1,14 @@
 import { Prisma } from "@/generated/prisma";
-import { BaseService } from "@/shared/base/base.service";
 import { BaseError } from "@/shared/base/base-error";
 import { ErrorCode } from "@/shared/base/error-code";
 import { ReadArgs } from "@/shared/domain/model/read-params";
+import { UserCrudService } from "@/shared/user-crud/user-crud.service";
 
 import { UserService } from "../user/user.service";
 
-import { ExerciseTypeModel } from "./exercise-type.model";
+import { exerciseTypeContract, ExerciseTypeModel } from "./exercise-type.model";
+
+import { z } from "zod";
 
 const select = {
   id: true,
@@ -17,12 +19,12 @@ const select = {
   muscleGroups: true,
 };
 
-export class ExerciseTypeService extends BaseService {
+export class ExerciseTypeService extends UserCrudService<ExerciseTypeModel> {
   constructor(
     private readonly exerciseTypeModel: typeof prisma.exerciseType,
     private readonly userService: UserService
   ) {
-    super();
+    super(exerciseTypeModel, select);
   }
 
   async create(data: ExerciseTypeModel["createArgs"]) {
@@ -32,7 +34,10 @@ export class ExerciseTypeService extends BaseService {
     });
   }
 
-  async read(userId: string, { filter, limit, page }: ReadArgs) {
+  async read(
+    userId: string,
+    { filter, limit, page }: ReadArgs
+  ): Promise<z.infer<typeof exerciseTypeContract.read.response>> {
     const take = page && limit ? limit : undefined;
     const skip = page && limit ? (page - 1) * limit : undefined;
 

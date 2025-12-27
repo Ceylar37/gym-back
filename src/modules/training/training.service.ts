@@ -1,8 +1,8 @@
 import { Prisma } from "@/generated/prisma";
-import { BaseService } from "@/shared/base/base.service";
 import { BaseError } from "@/shared/base/base-error";
 import { ErrorCode } from "@/shared/base/error-code";
 import { ReadArgs } from "@/shared/domain/model/read-params";
+import { UserCrudService } from "@/shared/user-crud/user-crud.service";
 
 import { TrainingModel } from "./training.model";
 
@@ -23,9 +23,9 @@ const select = {
   },
 };
 
-export class TrainingService extends BaseService {
+export class TrainingService extends UserCrudService<TrainingModel> {
   constructor(private readonly trainingModel: typeof prisma.training) {
-    super();
+    super(trainingModel, select);
   }
 
   async create({ exerciseTypeIds, ...data }: TrainingModel["createArgs"]) {
