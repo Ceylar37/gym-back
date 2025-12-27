@@ -17,11 +17,11 @@ export interface UserCrudModel {
 export interface CreateUserCrudModel<T extends CrudModel> {
   base: T["base"];
   createArgs: T["createArgs"] & {
-    userId: string | Prisma.StringFieldUpdateOperationsInput | undefined;
+    userId: string;
   };
   updateArgs: T["updateArgs"] & {
     id: string;
-    userId: string | Prisma.StringFieldUpdateOperationsInput | undefined;
+    userId: string;
   };
 }
 

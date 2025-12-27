@@ -22,6 +22,7 @@ model User {
   accessTokens      String[] @default([])
   refreshTokens     String[] @default([])
   exerciseTypes     ExerciseType[]
+  trainings         Training[]
 }
 
 model ExerciseType {
@@ -31,6 +32,23 @@ model ExerciseType {
   description       String   @default("")
   muscleGroups      String[] @default([])
   restTime          Int      @default(60)
+
   userId            String   @db.ObjectId
   user              User     @relation(fields: [userId], references: [id])
+
+  trainingIds       String[]   @db.ObjectId @default([])
+  trainings         Training[] @relation(fields: [trainingIds], references: [id])
+}
+
+model Training {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  favorite          Boolean  @default(false)
+  description       String   @default("")
+ 
+  userId            String   @db.ObjectId
+  user              User     @relation(fields: [userId], references: [id])
+
+  exerciseTypeIds   String[]   @db.ObjectId @default([])
+  exerciseTypes     ExerciseType[] @relation(fields: [exerciseTypeIds], references: [id])
 }
