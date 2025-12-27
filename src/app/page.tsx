@@ -2,7 +2,6 @@ import { authContract } from "@/modules/auth";
 import { exerciseTypeContract } from "@/modules/exercise-type/exercise-type.model";
 import { trainingContract } from "@/modules/training/training.model";
 import { ErrorCode } from "@/shared/base/error-code";
-import { MetaSchema } from "@/shared/domain/model/meta";
 import { initContract } from "@ts-rest/core";
 import { generateOpenApi } from "@ts-rest/open-api";
 
@@ -60,14 +59,7 @@ const contract = initContract().router({
       path: "/api/exercise-type",
       body: exerciseTypeContract.create.body,
       responses: {
-        200: z.object({
-          id: z.string(),
-          name: z.string(),
-          favorite: z.boolean(),
-          description: z.string(),
-          restTime: z.number(),
-          muscleGroups: z.array(z.string()),
-        }),
+        200: exerciseTypeContract.create.response,
         422: z.string(),
       },
     },
@@ -75,19 +67,8 @@ const contract = initContract().router({
       method: "GET",
       path: "/api/exercise-type",
       responses: {
-        200: z.object({
-          content: z.array(
-            z.object({
-              id: z.string(),
-              name: z.string(),
-              favorite: z.boolean(),
-              description: z.string(),
-              restTime: z.number(),
-              muscleGroups: z.array(z.string()),
-            })
-          ),
-          meta: MetaSchema,
-        }),
+        200: exerciseTypeContract.read.response,
+        422: z.string(),
       },
     },
     readOne: {
@@ -95,14 +76,7 @@ const contract = initContract().router({
       path: "/api/exercise-type/:id",
       pathParams: z.object({ id: z.string() }),
       responses: {
-        200: z.object({
-          id: z.string(),
-          name: z.string(),
-          favorite: z.boolean(),
-          description: z.string(),
-          restTime: z.number(),
-          muscleGroups: z.array(z.string()),
-        }),
+        200: exerciseTypeContract.readOne.response,
         404: z.enum([ErrorCode.NotFound]),
       },
     },
@@ -111,14 +85,7 @@ const contract = initContract().router({
       path: "/api/exercise-type",
       body: exerciseTypeContract.update.body,
       responses: {
-        200: z.object({
-          id: z.string(),
-          name: z.string(),
-          favorite: z.boolean(),
-          description: z.string(),
-          restTime: z.number(),
-          muscleGroups: z.array(z.string()),
-        }),
+        200: exerciseTypeContract.update.response,
         422: z.string(),
       },
     },
@@ -127,7 +94,6 @@ const contract = initContract().router({
       path: "/api/exercise-type/:id",
       pathParams: z.object({ id: z.string() }),
       responses: {
-        200: z.object({ id: z.string() }),
         404: z.enum([ErrorCode.NotFound]),
         422: z.string(),
       },
@@ -174,7 +140,6 @@ const contract = initContract().router({
       path: "/api/training/:id",
       pathParams: z.object({ id: z.string() }),
       responses: {
-        200: z.object({ id: z.string() }),
         404: z.enum([ErrorCode.NotFound]),
         422: z.string(),
       },

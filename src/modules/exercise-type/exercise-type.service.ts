@@ -8,6 +8,15 @@ import { UserService } from "../user/user.service";
 
 import { ExerciseTypeModel } from "./exercise-type.model";
 
+const select = {
+  id: true,
+  name: true,
+  favorite: true,
+  description: true,
+  restTime: true,
+  muscleGroups: true,
+};
+
 export class ExerciseTypeService extends BaseService {
   constructor(
     private readonly exerciseTypeModel: typeof prisma.exerciseType,
@@ -19,6 +28,7 @@ export class ExerciseTypeService extends BaseService {
   async create(data: ExerciseTypeModel["createArgs"]) {
     return await this.exerciseTypeModel.create({
       data,
+      select,
     });
   }
 
@@ -35,6 +45,7 @@ export class ExerciseTypeService extends BaseService {
       where,
       take,
       skip,
+      select,
     });
 
     const count = await this.exerciseTypeModel.count({
@@ -54,6 +65,7 @@ export class ExerciseTypeService extends BaseService {
   async readOne(id: string) {
     const exerciseType = await this.exerciseTypeModel.findUnique({
       where: { id },
+      select,
     });
     if (!exerciseType) {
       throw new BaseError(ErrorCode.NotFound, 404);
@@ -67,13 +79,14 @@ export class ExerciseTypeService extends BaseService {
         id,
       },
       data,
+      select,
     });
   }
 
   async delete(id: string) {
     await this.exerciseTypeModel.delete({
       where: {
-        id: id,
+        id,
       },
     });
   }
