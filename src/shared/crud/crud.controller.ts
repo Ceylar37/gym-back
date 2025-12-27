@@ -1,9 +1,9 @@
-import { BaseController } from "../base/base.controller";
-import { BaseError } from "../base/base-error";
-import { controllerDecorator } from "../base/controller-decorator";
-import { ErrorCode } from "../base/error-code";
-import { withAuth } from "../decorators/with-auth";
-import { withBody } from "../decorators/with-body";
+import { BaseController } from "@/shared/base/base.controller";
+import { BaseError } from "@/shared/base/base-error";
+import { controllerDecorator } from "@/shared/base/controller-decorator";
+import { ErrorCode } from "@/shared/base/error-code";
+import { withAuth } from "@/shared/decorators/with-auth";
+import { withBody } from "@/shared/decorators/with-body";
 
 import { CrudContract, CrudModel } from "./crud.model";
 

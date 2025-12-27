@@ -1,8 +1,7 @@
+import { BaseController } from "@/shared/base/base.controller";
+import { controllerDecorator } from "@/shared/base/controller-decorator";
 import { withAuth } from "@/shared/decorators/with-auth";
 import { withBody } from "@/shared/decorators/with-body";
-
-import { BaseController } from "../../shared/base/base.controller";
-import { controllerDecorator } from "../../shared/base/controller-decorator";
 
 import { authContract } from "./auth.model";
 import { AuthService } from "./auth.service";
@@ -16,29 +15,26 @@ export const AuthController = controllerDecorator(
     }
 
     register = withBody(authContract.register.body)(async (req) => {
-      const user = await req.json();
-      const tokens = await this.authService.register(user);
+      const tokens = await this.authService.register(req.getBody());
       return NextResponse.json(tokens);
     });
 
     login = withBody(authContract.login.body)(async (req) => {
-      const { email, password } = await req.json();
-      const tokens = await this.authService.login({ email, password });
+      const tokens = await this.authService.login(req.getBody());
       return NextResponse.json(tokens);
     });
 
     refresh = withBody(authContract.refresh.body)(async (req) => {
-      const { refreshToken } = await req.json();
+      const { refreshToken } = req.getBody();
       const tokens = await this.authService.refresh(refreshToken);
       return NextResponse.json(tokens);
     });
 
-    profile = withAuth(async (req, user) => {
+    profile = withAuth(async (req) => {
       const userData = {
-        id: user.id,
-        email: user.email,
+        id: req.getUser().id,
+        email: req.getUser().email,
       };
-
       return NextResponse.json(userData);
     });
   }

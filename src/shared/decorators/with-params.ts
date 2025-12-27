@@ -1,31 +1,18 @@
-import { RequestWithBody } from "@/types/request-with-body";
+import { validateParams } from "../utils/request/validate-params";
 
+import { NextRequest } from "next/server";
 import z, { ZodSchema } from "zod";
 
-export const withParams = <T extends ZodSchema>(
-  schema: T,
-  cb: (
-    req: RequestWithBody<z.infer<T>>,
-    ...restArgs: unknown[]
-  ) => Promise<Response>
-) => {
-  return async (req: Request, ...restArgs: unknown[]) => {
-    try {
-      const params = new URL(req.url).searchParams;
+export type RequestWithParams<Request extends NextRequest> = Request & {
+  getParams: () => z.infer<ZodSchema>;
+};
 
-      const { success, error } = schema.safeParse(params);
-      if (!success) {
-        return new Response(
-          `${error.issues[0].path}: ${error.issues[0].message}`,
-          { status: 400 }
-        );
-      }
-      return cb(req, ...restArgs);
-    } catch (error: unknown) {
-      if (error && typeof error === "object" && "message" in error) {
-        return new Response(JSON.stringify(error.message), { status: 400 });
-      }
-      return new Response(JSON.stringify(error), { status: 400 });
-    }
+export const withParams = <Request extends NextRequest, T extends ZodSchema>(
+  schema: T,
+  cb: (req: RequestWithParams<Request>) => Promise<Response>
+) => {
+  return async (req: Request) => {
+    const body = await validateParams(req, schema);
+    return cb(Object.assign(req, { getParams: () => body }));
   };
 };

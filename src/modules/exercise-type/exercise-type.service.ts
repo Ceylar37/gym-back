@@ -1,6 +1,8 @@
+import { Prisma } from "@/generated/prisma";
 import { BaseService } from "@/shared/base/base.service";
 import { BaseError } from "@/shared/base/base-error";
 import { ErrorCode } from "@/shared/base/error-code";
+import { ReadArgs } from "@/shared/domain/model/read-params";
 
 import { UserService } from "../user/user.service";
 
@@ -20,12 +22,33 @@ export class ExerciseTypeService extends BaseService {
     });
   }
 
-  async read(userId: string) {
-    return await this.exerciseTypeModel.findMany({
-      where: {
-        userId,
-      },
+  async read(userId: string, { filter, limit, page }: ReadArgs) {
+    const take = page && limit ? limit : undefined;
+    const skip = page && limit ? (page - 1) * limit : undefined;
+
+    const where: Prisma.ExerciseTypeWhereInput = {
+      ...filter,
+      userId,
+    };
+
+    const content = await this.exerciseTypeModel.findMany({
+      where,
+      take,
+      skip,
     });
+
+    const count = await this.exerciseTypeModel.count({
+      where,
+    });
+
+    return {
+      content,
+      meta: {
+        limit,
+        page,
+        pages: Math.ceil(count / (limit || 25)),
+      },
+    };
   }
 
   async readOne(id: string) {

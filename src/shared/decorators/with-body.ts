@@ -1,40 +1,22 @@
-import { RequestWithBody } from "@/types/request-with-body";
+import { validateBody } from "../utils/request/validate-body";
 
-import { NextResponse } from "next/server";
-import z, { ZodSchema } from "zod";
+import { NextRequest } from "next/server";
+import z from "zod";
 
-export const withBody = <
-  T extends ZodSchema,
-  Args extends unknown[] = unknown[]
->(
-  schema: T
-) => {
-  return (
-    cb: (
-      req: RequestWithBody<z.infer<T>>,
-      ...restArgs: Args
-    ) => Promise<Response>
+export type RequestWithBody<
+  Request extends NextRequest,
+  Schema extends z.ZodSchema
+> = Request & {
+  getBody: () => z.infer<Schema>;
+};
+
+export const withBody = <Schema extends z.ZodSchema>(schema: Schema) => {
+  return <Request extends NextRequest>(
+    cb: (req: RequestWithBody<Request, Schema>) => Promise<Response>
   ) => {
-    return async (req: Request, ...restArgs: Args) => {
-      const clone = req.clone();
-      try {
-        const body = await clone.json();
-        const { success, error } = schema.safeParse(body);
-        if (!success) {
-          return new NextResponse(
-            `${error.issues[0].path}: ${error.issues[0].message}`,
-            { status: 422 }
-          );
-        }
-        return cb(req, ...restArgs);
-      } catch (error: unknown) {
-        if (error && typeof error === "object" && "message" in error) {
-          return new NextResponse(JSON.stringify(error.message), {
-            status: 422,
-          });
-        }
-        return new NextResponse(JSON.stringify(error), { status: 422 });
-      }
+    return async (req: Request) => {
+      const body = await validateBody(req, schema);
+      return cb(Object.assign(req, { getBody: () => body }));
     };
   };
 };
