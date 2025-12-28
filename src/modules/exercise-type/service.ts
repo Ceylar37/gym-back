@@ -1,14 +1,10 @@
-import { Prisma } from "@/generated/prisma";
 import { BaseError } from "@/shared/base/base-error";
 import { ErrorCode } from "@/shared/base/error-code";
-import { ReadArgs } from "@/shared/domain/model/read-params";
 import { UserCrudService } from "@/shared/user-crud/user-crud.service";
 
 import { UserService } from "../user/user.service";
 
-import { exerciseTypeContract, ExerciseTypeModel } from "./model";
-
-import { z } from "zod";
+import { ExerciseTypeModel } from "./model";
 
 const select = {
   id: true,
@@ -32,39 +28,6 @@ export class ExerciseTypeService extends UserCrudService<ExerciseTypeModel> {
       data,
       select,
     });
-  }
-
-  async read(
-    userId: string,
-    { filter, limit, page }: ReadArgs
-  ): Promise<z.infer<typeof exerciseTypeContract.read.response>> {
-    const take = page && limit ? limit : undefined;
-    const skip = page && limit ? (page - 1) * limit : undefined;
-
-    const where: Prisma.ExerciseTypeWhereInput = {
-      ...filter,
-      userId,
-    };
-
-    const content = await this.exerciseTypeModel.findMany({
-      where,
-      take,
-      skip,
-      select,
-    });
-
-    const count = await this.exerciseTypeModel.count({
-      where,
-    });
-
-    return {
-      content,
-      meta: {
-        limit,
-        page,
-        pages: page && limit ? Math.ceil(count / limit) : undefined,
-      },
-    };
   }
 
   async readOne(id: string) {

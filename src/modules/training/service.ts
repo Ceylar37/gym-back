@@ -1,7 +1,5 @@
-import { Prisma } from "@/generated/prisma";
 import { BaseError } from "@/shared/base/base-error";
 import { ErrorCode } from "@/shared/base/error-code";
-import { ReadArgs } from "@/shared/domain/model/read-params";
 import { UserCrudService } from "@/shared/user-crud/user-crud.service";
 
 import { TrainingModel } from "./model";
@@ -38,36 +36,6 @@ export class TrainingService extends UserCrudService<TrainingModel> {
       },
       select,
     });
-  }
-
-  async read(userId: string, { filter, limit, page }: ReadArgs) {
-    const take = page && limit ? limit : undefined;
-    const skip = page && limit ? (page - 1) * limit : undefined;
-
-    const where: Prisma.TrainingWhereInput = {
-      ...filter,
-      userId,
-    };
-
-    const content = await this.trainingModel.findMany({
-      where,
-      take,
-      skip,
-      select,
-    });
-
-    const count = await this.trainingModel.count({
-      where,
-    });
-
-    return {
-      content,
-      meta: {
-        limit,
-        page,
-        pages: page && limit ? Math.ceil(count / limit) : undefined,
-      },
-    };
   }
 
   async readOne(id: string) {
