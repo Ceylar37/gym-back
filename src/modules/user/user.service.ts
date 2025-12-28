@@ -241,4 +241,18 @@ export class UserService extends BaseService {
       data,
     });
   }
+
+  async getOne(id: string) {
+    const user = await this.userModel.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) {
+      throw new BaseError(ErrorCode.NotFound, 404);
+    }
+
+    return user;
+  }
 }

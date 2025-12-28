@@ -23,6 +23,8 @@ model User {
   refreshTokens     String[] @default([])
   exerciseTypes     ExerciseType[]
   trainings         Training[]
+
+  activeTraining    ActiveTraining?
 }
 
 model ExerciseType {
@@ -51,4 +53,26 @@ model Training {
 
   exerciseTypeIds   String[]   @db.ObjectId @default([])
   exerciseTypes     ExerciseType[] @relation(fields: [exerciseTypeIds], references: [id])
+
+  activeTrainings   ActiveTraining[]
+}
+
+type ActiveTraining {
+  dateStart         DateTime
+  name              String
+  description       String
+  exercises         CurrentExercise[]
+}
+
+type CurrentExercise {
+  name              String
+  description       String
+  restTime          Int
+  sets              CurrentSet[]
+}
+
+type CurrentSet {
+  weight            Int
+  repeatCount       Int
+  done              Boolean @default(false)
 }

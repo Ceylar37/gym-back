@@ -1,3 +1,4 @@
+import { activeTrainingContract } from "@/modules/active-training";
 import { authContract } from "@/modules/auth";
 import { exerciseTypeContract } from "@/modules/exercise-type/model";
 import { trainingContract } from "@/modules/training/model";
@@ -142,6 +143,36 @@ const contract = initContract().router({
       responses: {
         404: z.enum([ErrorCode.NotFound]),
         422: z.string(),
+      },
+    },
+  },
+  "active-training": {
+    start: {
+      method: "POST",
+      path: "/api/active-training/start",
+      body: activeTrainingContract.start.body,
+      responses: {
+        200: activeTrainingContract.start.response,
+        404: z.enum([ErrorCode.NotFound]),
+        400: z.enum([ErrorCode.AlreadyExists]),
+      },
+    },
+    update: {
+      method: "PUT",
+      path: "/api/active-training/update",
+      body: activeTrainingContract.update.body,
+      responses: {
+        200: activeTrainingContract.update.response,
+        404: z.enum([ErrorCode.NotFound]),
+      },
+    },
+    end: {
+      method: "POST",
+      path: "/api/active-training/end",
+      body: activeTrainingContract.end.body,
+      responses: {
+        200: activeTrainingContract.end.response,
+        404: z.enum([ErrorCode.NotFound]),
       },
     },
   },
