@@ -1,6 +1,6 @@
 import { authContract } from "@/modules/auth";
-import { exerciseTypeContract } from "@/modules/exercise-type/exercise-type.model";
-import { trainingContract } from "@/modules/training/training.model";
+import { exerciseTypeContract } from "@/modules/exercise-type/model";
+import { trainingContract } from "@/modules/training/model";
 import { ErrorCode } from "@/shared/base/error-code";
 import { initContract } from "@ts-rest/core";
 import { generateOpenApi } from "@ts-rest/open-api";

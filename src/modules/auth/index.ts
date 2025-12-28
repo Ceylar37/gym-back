@@ -1,7 +1,7 @@
 import user from "@/modules/user";
 
-import { AuthController } from "./auth.controller";
-import { AuthService } from "./auth.service";
+import { AuthController } from "./controller";
+import { AuthService } from "./service";
 
 const authService = new AuthService(user.service);
 const authController = new AuthController(authService);
@@ -11,4 +11,4 @@ const auth = {
 };
 
 export default auth;
-export { authContract } from "./auth.model";
+export { authContract } from "./model";

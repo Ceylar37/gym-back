@@ -6,7 +6,7 @@ import { UserCrudService } from "@/shared/user-crud/user-crud.service";
 
 import { UserService } from "../user/user.service";
 
-import { exerciseTypeContract, ExerciseTypeModel } from "./exercise-type.model";
+import { exerciseTypeContract, ExerciseTypeModel } from "./model";
 
 import { z } from "zod";
 

@@ -1,7 +1,7 @@
 import { UserCrudController } from "@/shared/user-crud/user-crud.controller";
 
-import { exerciseTypeContract, ExerciseTypeModel } from "./exercise-type.model";
-import { ExerciseTypeService } from "./exercise-type.service";
+import { exerciseTypeContract, ExerciseTypeModel } from "./model";
+import { ExerciseTypeService } from "./service";
 
 export class ExerciseTypeController extends UserCrudController<ExerciseTypeModel> {
   constructor(private readonly exerciseTypeService: ExerciseTypeService) {

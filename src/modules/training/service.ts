@@ -4,7 +4,7 @@ import { ErrorCode } from "@/shared/base/error-code";
 import { ReadArgs } from "@/shared/domain/model/read-params";
 import { UserCrudService } from "@/shared/user-crud/user-crud.service";
 
-import { TrainingModel } from "./training.model";
+import { TrainingModel } from "./model";
 
 const select = {
   id: true,

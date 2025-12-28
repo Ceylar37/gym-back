@@ -1,5 +1,5 @@
-import { UserService } from "@/modules/user/user.service";
 import { CreateUserArgs, LoginUserArgs } from "@/modules/user/user.model";
+import { UserService } from "@/modules/user/user.service";
 import { BaseService } from "@/shared/base/base.service";
 import { BaseError } from "@/shared/base/base-error";
 import { ErrorCode } from "@/shared/base/error-code";

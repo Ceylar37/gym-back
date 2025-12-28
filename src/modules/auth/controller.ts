@@ -3,8 +3,8 @@ import { controllerDecorator } from "@/shared/base/controller-decorator";
 import { withAuth } from "@/shared/decorators/with-auth";
 import { withBody } from "@/shared/decorators/with-body";
 
-import { authContract } from "./auth.model";
-import { AuthService } from "./auth.service";
+import { authContract } from "./model";
+import { AuthService } from "./service";
 
 import { NextResponse } from "next/server";
 
