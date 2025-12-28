@@ -2,6 +2,7 @@ import { activeTrainingContract } from "@/modules/active-training";
 import { authContract } from "@/modules/auth";
 import { exerciseTypeContract } from "@/modules/exercise-type/model";
 import { trainingContract } from "@/modules/training/model";
+import { trainingHistoryContract } from "@/modules/training-history/model";
 import { ErrorCode } from "@/shared/base/error-code";
 import { initContract } from "@ts-rest/core";
 import { generateOpenApi } from "@ts-rest/open-api";
@@ -173,6 +174,43 @@ const contract = initContract().router({
       responses: {
         200: activeTrainingContract.end.response,
         404: z.enum([ErrorCode.NotFound]),
+      },
+    },
+  },
+  "training-history": {
+    read: {
+      method: "GET",
+      path: "/api/training-history",
+      responses: {
+        200: trainingHistoryContract.read.response,
+        422: z.string(),
+      },
+    },
+    readOne: {
+      method: "GET",
+      path: "/api/training-history/:id",
+      pathParams: z.object({ id: z.string() }),
+      responses: {
+        200: trainingHistoryContract.readOne.response,
+        404: z.enum([ErrorCode.NotFound]),
+      },
+    },
+    update: {
+      method: "PUT",
+      path: "/api/training-history",
+      body: trainingHistoryContract.update.body,
+      responses: {
+        200: trainingHistoryContract.update.response,
+        422: z.string(),
+      },
+    },
+    delete: {
+      method: "DELETE",
+      path: "/api/training-history/:id",
+      pathParams: z.object({ id: z.string() }),
+      responses: {
+        404: z.enum([ErrorCode.NotFound]),
+        422: z.string(),
       },
     },
   },

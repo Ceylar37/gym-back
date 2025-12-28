@@ -2,13 +2,16 @@ import training from "@/modules/training";
 import user from "@/modules/user";
 import prisma from "@/shared/domain/prisma";
 
+import trainingHistory from "../training-history";
+
 import { ActiveTrainingController } from "./controller";
 import { ActiveTrainingService } from "./service";
 
 const activeTrainingService = new ActiveTrainingService(
   prisma.user,
   user.service,
-  training.service
+  training.service,
+  trainingHistory.service
 );
 const activeTrainingController = new ActiveTrainingController(
   activeTrainingService

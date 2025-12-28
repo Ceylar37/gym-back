@@ -3,6 +3,7 @@ import { BaseError } from "@/shared/base/base-error";
 import { ErrorCode } from "@/shared/base/error-code";
 
 import { TrainingService } from "../training/service";
+import { TrainingHistoryService } from "../training-history/service";
 import { UserService } from "../user/user.service";
 
 import { activeTrainingContract } from "./model";
@@ -13,7 +14,8 @@ export class ActiveTrainingService extends BaseService {
   constructor(
     private readonly userModel: typeof prisma.user,
     private readonly userService: UserService,
-    private readonly trainingService: TrainingService
+    private readonly trainingService: TrainingService,
+    private readonly trainingHistoryService: TrainingHistoryService
   ) {
     super();
   }
@@ -91,7 +93,12 @@ export class ActiveTrainingService extends BaseService {
       throw new BaseError(ErrorCode.NotFound, 404);
     }
 
-    return this.userModel.update({
+    await this.trainingHistoryService.create({
+      userId,
+      ...currentActiveTraining,
+    });
+
+    await this.userModel.update({
       where: {
         id: userId,
       },

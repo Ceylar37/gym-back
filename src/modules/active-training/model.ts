@@ -1,20 +1,7 @@
+import { exerciseSchema } from "@/shared/domain/model/exercise-schema";
+
 import z from "zod";
 
-const setSchema = z
-  .object({
-    weight: z.number(),
-    repeatCount: z.number(),
-    done: z.boolean(),
-  })
-  .strict();
-const exerciseSchema = z
-  .object({
-    name: z.string(),
-    description: z.string(),
-    restTime: z.number(),
-    sets: z.array(setSchema),
-  })
-  .strict();
 const activeTrainingSchema = z
   .object({
     dateStart: z.string(),
