@@ -1,43 +1,49 @@
+import { createCrudContract } from "@/shared/domain/model/create-crud-contract";
 import { exerciseSchema } from "@/shared/domain/model/exercise-schema";
 import { CreateUserCrudModel } from "@/shared/user-crud/user-crud.model";
-import { createPaginationSchema } from "@/shared/utils/response/create-pagination-schema";
+import { extendZodWithOpenApi } from "@anatine/zod-openapi";
 
 import { z } from "zod";
 
-const trainingHistorySchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  description: z.string(),
-  exercises: z.array(exerciseSchema),
-  dateStart: z.string(),
+extendZodWithOpenApi(z);
+
+const trainingHistorySchema = z
+  .object({
+    id: z.string(),
+    name: z.string(),
+    description: z.string(),
+    exercises: z.array(exerciseSchema),
+    dateStart: z.string(),
+  })
+  .openapi({ title: "TrainingHistory" });
+const trainingHistoryCreateSchema = z
+  .object({
+    name: z.string(),
+    description: z.string(),
+    exercises: z.array(exerciseSchema),
+    dateStart: z.string(),
+  })
+  .strict()
+  .openapi({ title: "TrainingHistoryCreate" });
+const trainingHistoryUpdateSchema = trainingHistorySchema.strict().openapi({
+  title: "TrainingHistoryUpdate",
+});
+
+export const _trainingHistoryContract = createCrudContract("training-history", {
+  base: trainingHistorySchema,
+  create: trainingHistoryCreateSchema,
+  update: trainingHistoryUpdateSchema,
 });
 
 export const trainingHistoryContract = {
-  read: {
-    response: createPaginationSchema(trainingHistorySchema),
-  },
-  readOne: {
-    response: trainingHistorySchema,
-  },
-  create: {
-    body: z
-      .object({
-        name: z.string(),
-        description: z.string(),
-        exercises: z.array(exerciseSchema),
-        dateStart: z.string(),
-      })
-      .strict(),
-    response: trainingHistorySchema,
-  },
-  update: {
-    body: trainingHistorySchema.strict(),
-    response: trainingHistorySchema,
-  },
+  read: _trainingHistoryContract.read,
+  readOne: _trainingHistoryContract.readOne,
+  update: _trainingHistoryContract.update,
+  delete: _trainingHistoryContract.delete,
 };
 
 export type TrainingHistoryModel = CreateUserCrudModel<{
   base: z.infer<typeof trainingHistorySchema>;
-  createArgs: z.infer<typeof trainingHistoryContract.create.body>;
+  createArgs: z.infer<typeof _trainingHistoryContract.create.body>;
   updateArgs: z.infer<typeof trainingHistoryContract.update.body>;
 }>;

@@ -1,6 +1,10 @@
+import { ErrorCode } from "@/shared/base/error-code";
 import { exerciseSchema } from "@/shared/domain/model/exercise-schema";
+import { extendZodWithOpenApi } from "@anatine/zod-openapi";
 
 import z from "zod";
+
+extendZodWithOpenApi(z);
 
 const activeTrainingSchema = z
   .object({
@@ -9,19 +13,40 @@ const activeTrainingSchema = z
     description: z.string(),
     exercises: z.array(exerciseSchema),
   })
-  .strict();
+  .strict()
+  .openapi({
+    title: "ActiveTraining",
+  });
 
 export const activeTrainingContract = {
   start: {
-    body: z.object({ id: z.string(), dateStart: z.string() }).strict(),
-    response: activeTrainingSchema,
+    method: "POST" as const,
+    path: "/api/active-training/start",
+    body: z.object({ id: z.string(), dateStart: z.string() }).strict().openapi({
+      title: "ActiveTrainingStartBody",
+    }),
+    responses: {
+      200: activeTrainingSchema,
+      404: z.enum([ErrorCode.NotFound]),
+      400: z.enum([ErrorCode.AlreadyExists]),
+    },
   },
   update: {
+    method: "PUT" as const,
+    path: "/api/active-training/update",
     body: activeTrainingSchema,
-    response: activeTrainingSchema,
+    responses: {
+      200: activeTrainingSchema,
+      404: z.enum([ErrorCode.NotFound]),
+    },
   },
   end: {
+    method: "POST" as const,
+    path: "/api/active-training/end",
     body: z.void(),
-    response: z.void(),
+    responses: {
+      200: z.void(),
+      404: z.enum([ErrorCode.NotFound]),
+    },
   },
 };

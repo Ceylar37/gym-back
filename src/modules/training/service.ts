@@ -26,12 +26,12 @@ export class TrainingService extends UserCrudService<TrainingModel> {
     super(trainingModel, select);
   }
 
-  async create({ exerciseTypeIds, ...data }: TrainingModel["createArgs"]) {
+  async create({ exerciseTypes, ...data }: TrainingModel["createArgs"]) {
     return await this.trainingModel.create({
       data: {
         ...data,
         exerciseTypes: {
-          connect: exerciseTypeIds.map((id) => ({ id })),
+          connect: exerciseTypes,
         },
       },
       select,
@@ -49,16 +49,18 @@ export class TrainingService extends UserCrudService<TrainingModel> {
     return training;
   }
 
-  async update({ id, exerciseTypeIds, ...data }: TrainingModel["updateArgs"]) {
+  async update({ id, exerciseTypes, ...data }: TrainingModel["updateArgs"]) {
     const training = await this.readOne(id);
 
-    const addedExerciseTypesIds = exerciseTypeIds.filter(
-      (id) =>
+    const addedExerciseTypesIds = exerciseTypes.filter(
+      ({ id }) =>
         !training.exerciseTypes.find((exerciseType) => exerciseType.id === id)
     );
     const removedExerciseTypesIds = training.exerciseTypes
       .map((exerciseType) => exerciseType.id)
-      .filter((id) => !exerciseTypeIds.includes(id));
+      .filter(
+        (id) => !exerciseTypes.find((exerciseType) => exerciseType.id === id)
+      );
 
     return await this.trainingModel.update({
       where: {
@@ -67,7 +69,7 @@ export class TrainingService extends UserCrudService<TrainingModel> {
       data: {
         ...data,
         exerciseTypes: {
-          connect: addedExerciseTypesIds.map((id) => ({ id })),
+          connect: addedExerciseTypesIds,
           disconnect: removedExerciseTypesIds.map((id) => ({ id })),
         },
       },

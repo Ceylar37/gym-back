@@ -96,6 +96,7 @@ export class ActiveTrainingService extends BaseService {
     await this.trainingHistoryService.create({
       userId,
       ...currentActiveTraining,
+      dateStart: currentActiveTraining.dateStart.toISOString(),
     });
 
     await this.userModel.update({

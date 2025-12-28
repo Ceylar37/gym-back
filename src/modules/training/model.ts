@@ -1,56 +1,72 @@
+import { createCrudContract } from "@/shared/domain/model/create-crud-contract";
 import { CreateUserCrudModel } from "@/shared/user-crud/user-crud.model";
-import { createPaginationSchema } from "@/shared/utils/response/create-pagination-schema";
+import { extendZodWithOpenApi } from "@anatine/zod-openapi";
 
 import { z } from "zod";
 
-const trainingSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  favorite: z.boolean(),
-  description: z.string(),
-  exerciseTypes: z.array(
-    z.object({
-      id: z.string(),
-      name: z.string(),
-      favorite: z.boolean(),
-      description: z.string(),
-      muscleGroups: z.array(z.string()),
-      restTime: z.number(),
-    })
-  ),
-});
+extendZodWithOpenApi(z);
 
-export const trainingContract = {
-  read: {
-    response: createPaginationSchema(trainingSchema),
-  },
-  readOne: {
-    response: trainingSchema,
-  },
-  create: {
-    body: z
-      .object({
-        name: z.string(),
-        favorite: z.boolean().optional(),
-        description: z.string().optional(),
-        exerciseTypeIds: z.array(z.string()).min(1),
-      })
-      .strict(),
-    response: trainingSchema,
-  },
-  update: {
-    body: z
-      .object({
+const trainingSchema = z
+  .object({
+    id: z.string(),
+    name: z.string(),
+    favorite: z.boolean(),
+    description: z.string(),
+    exerciseTypes: z.array(
+      z.object({
         id: z.string(),
-        name: z.string().optional(),
-        favorite: z.boolean().optional(),
-        description: z.string().optional(),
-        exerciseTypeIds: z.array(z.string()).min(1),
+        name: z.string(),
+        favorite: z.boolean(),
+        description: z.string(),
+        muscleGroups: z.array(z.string()),
+        restTime: z.number(),
       })
-      .strict(),
-    response: trainingSchema,
-  },
-};
+    ),
+  })
+  .openapi({
+    title: "Training",
+  });
+const trainingCreateSchema = z
+  .object({
+    name: z.string(),
+    favorite: z.boolean().optional(),
+    description: z.string().optional(),
+    exerciseTypes: z
+      .array(
+        z.object({
+          id: z.string(),
+        })
+      )
+      .min(1),
+  })
+  .strict()
+  .openapi({
+    title: "TrainingCreateBody",
+  });
+const trainingUpdateSchema = z
+  .object({
+    id: z.string(),
+    name: z.string().optional(),
+    favorite: z.boolean().optional(),
+    description: z.string().optional(),
+    exerciseTypes: z
+      .array(
+        z.object({
+          id: z.string(),
+        })
+      )
+      .min(1),
+  })
+  .strict()
+  .openapi({
+    title: "TrainingUpdateBody",
+  });
+
+export const trainingContract = createCrudContract("training", {
+  base: trainingSchema,
+  create: trainingCreateSchema,
+  update: trainingUpdateSchema,
+});
 
 export type TrainingModel = CreateUserCrudModel<{
   base: z.infer<typeof trainingSchema>;
