@@ -50,27 +50,14 @@ export class TrainingService extends UserCrudService<TrainingModel> {
   }
 
   async update({ id, exerciseTypes, ...data }: TrainingModel["updateArgs"]) {
-    const training = await this.readOne(id);
-
-    const addedExerciseTypesIds = exerciseTypes.filter(
-      ({ id }) =>
-        !training.exerciseTypes.find((exerciseType) => exerciseType.id === id)
-    );
-    const removedExerciseTypesIds = training.exerciseTypes
-      .map((exerciseType) => exerciseType.id)
-      .filter(
-        (id) => !exerciseTypes.find((exerciseType) => exerciseType.id === id)
-      );
-
     return await this.trainingModel.update({
       where: {
         id,
       },
       data: {
         ...data,
-        exerciseTypes: {
-          connect: addedExerciseTypesIds,
-          disconnect: removedExerciseTypesIds.map((id) => ({ id })),
+        exerciseTypeIds: {
+          set: exerciseTypes.map(({ id }) => id),
         },
       },
       select,
