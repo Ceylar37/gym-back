@@ -41,8 +41,30 @@ export class TrainingHistoryService extends BaseService {
   }
 
   async read(userId: string, { filter, limit, page }: ReadArgs) {
-    const take = page && limit ? limit : undefined;
-    const skip = page && limit ? (page - 1) * limit : undefined;
+    // const take = page && limit ? limit : undefined;
+    // const skip = page && limit ? (page - 1) * limit : undefined;
+    let take;
+    let skip;
+
+    if (page && limit) {
+      take = limit;
+      skip = (page - 1) * limit;
+    }
+
+    if (page && !limit) {
+      take = 20;
+      skip = (page - 1) * 20;
+    }
+
+    if (!page && limit) {
+      take = limit;
+      skip = 0;
+    }
+
+    if (!page && !limit) {
+      take = undefined;
+      skip = undefined;
+    }
 
     const where = {
       ...filter,
@@ -65,9 +87,9 @@ export class TrainingHistoryService extends BaseService {
     return {
       content,
       meta: {
-        limit,
-        page,
-        pages: page && limit ? Math.ceil(count / limit) : undefined,
+        limit: take === undefined ? count : take,
+        page: skip === undefined ? 1 : page,
+        pages: take === undefined ? 1 : Math.ceil(count / take),
       },
     };
   }

@@ -108,4 +108,15 @@ export class ActiveTrainingService extends BaseService {
       },
     });
   }
+
+  async getActiveTraining(userId: string) {
+    const { activeTraining: currentActiveTraining } =
+      await this.userService.getOne(userId);
+
+    if (!currentActiveTraining) {
+      throw new BaseError(ErrorCode.AlreadyExists, 400);
+    }
+
+    return currentActiveTraining;
+  }
 }

@@ -38,5 +38,11 @@ export const ActiveTrainingController = controllerDecorator(
       await this.activeTrainingService.end({ userId: req.getUser().id });
       return new NextResponse();
     });
+
+    get = withAuth(async (req) => {
+      return NextResponse.json(
+        await this.activeTrainingService.getActiveTraining(req.getUser().id)
+      );
+    });
   }
 );

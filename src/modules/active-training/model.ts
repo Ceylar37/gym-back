@@ -19,6 +19,14 @@ const activeTrainingSchema = z
   });
 
 export const activeTrainingContract = {
+  get: {
+    method: "GET" as const,
+    path: "/api/active-training",
+    responses: {
+      200: activeTrainingSchema,
+      404: z.enum([ErrorCode.NotFound]),
+    },
+  },
   start: {
     method: "POST" as const,
     path: "/api/active-training/start",
@@ -32,7 +40,7 @@ export const activeTrainingContract = {
     },
   },
   update: {
-    method: "PUT" as const,
+    method: "PATCH" as const,
     path: "/api/active-training/update",
     body: activeTrainingSchema,
     responses: {

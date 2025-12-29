@@ -50,7 +50,7 @@ export const createCrudContract = <
     },
   },
   update: {
-    method: "PUT" as const,
+    method: "PATCH" as const,
     path: `/api/${path}`,
     body: options.update,
     responses: {
