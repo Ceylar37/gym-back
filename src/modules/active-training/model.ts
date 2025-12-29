@@ -1,5 +1,8 @@
 import { ErrorCode } from "@/shared/base/error-code";
-import { exerciseSchema } from "@/shared/domain/model/exercise-schema";
+import {
+  exerciseSchema,
+  exerciseSchemaWithId,
+} from "@/shared/domain/model/exercise-schema";
 import { extendZodWithOpenApi } from "@anatine/zod-openapi";
 
 import z from "zod";
@@ -11,11 +14,22 @@ const activeTrainingSchema = z
     dateStart: z.string(),
     name: z.string(),
     description: z.string(),
-    exercises: z.array(exerciseSchema),
+    exercises: z.array(exerciseSchemaWithId),
   })
   .strict()
   .openapi({
     title: "ActiveTraining",
+  });
+const activeTrainingUpdateSchema = z
+  .object({
+    dateStart: z.string(),
+    name: z.string(),
+    description: z.string(),
+    exercises: z.array(exerciseSchema),
+  })
+  .strict()
+  .openapi({
+    title: "UpdateActiveTrainingBody",
   });
 
 export const activeTrainingContract = {
@@ -42,7 +56,7 @@ export const activeTrainingContract = {
   update: {
     method: "PATCH" as const,
     path: "/api/active-training/update",
-    body: activeTrainingSchema,
+    body: activeTrainingUpdateSchema,
     responses: {
       200: activeTrainingSchema,
       404: z.enum([ErrorCode.NotFound]),
