@@ -49,7 +49,13 @@ export class ActiveTrainingService extends BaseService {
             name: exerciseType.name,
             description: exerciseType.description,
             restTime: exerciseType.restTime,
-            sets: [],
+            sets: [
+              {
+                repeatCount: 0,
+                weight: 0,
+                done: false,
+              },
+            ],
             muscleGroups: exerciseType.muscleGroups,
             useCustomSets: false,
           })),
