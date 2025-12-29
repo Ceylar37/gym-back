@@ -39,7 +39,6 @@ const trainingCreateSchema = z
       )
       .min(1),
   })
-  .strict()
   .openapi({
     title: "TrainingCreateBody",
   });
@@ -57,7 +56,6 @@ const trainingUpdateSchema = z
       )
       .min(1),
   })
-  .strict()
   .openapi({
     title: "TrainingUpdateBody",
   });
