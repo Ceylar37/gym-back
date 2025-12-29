@@ -8,5 +8,7 @@ export const exerciseSchema = z
     description: z.string(),
     restTime: z.number(),
     sets: z.array(setSchema),
+    muscleGroups: z.array(z.string()),
+    useCustomSets: z.boolean(),
   })
   .strict();

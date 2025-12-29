@@ -70,6 +70,8 @@ type CurrentExercise {
   description       String
   restTime          Int
   sets              CurrentSet[]
+  muscleGroups      String[]
+  useCustomSets     Boolean @default(false)
 }
 
 type CurrentSet {
