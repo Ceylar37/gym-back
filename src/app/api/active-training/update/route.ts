@@ -1,3 +1,3 @@
 import activeTraining from "@/modules/active-training";
 
-export const PUT = activeTraining.controller.update;
+export const PATCH = activeTraining.controller.update;
