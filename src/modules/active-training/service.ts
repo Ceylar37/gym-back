@@ -116,7 +116,7 @@ export class ActiveTrainingService extends BaseService {
       await this.userService.getOne(userId);
 
     if (!currentActiveTraining) {
-      throw new BaseError(ErrorCode.AlreadyExists, 400);
+      throw new BaseError(ErrorCode.NotFound, 404);
     }
 
     return currentActiveTraining;
