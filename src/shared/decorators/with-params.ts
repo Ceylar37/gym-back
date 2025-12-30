@@ -1,6 +1,6 @@
 import { validateParams } from "../utils/request/validate-params";
 
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import z, { ZodSchema } from "zod";
 
 export type RequestWithParams<Request extends NextRequest> = Request & {
@@ -9,7 +9,7 @@ export type RequestWithParams<Request extends NextRequest> = Request & {
 
 export const withParams = <Request extends NextRequest, T extends ZodSchema>(
   schema: T,
-  cb: (req: RequestWithParams<Request>) => Promise<Response>
+  cb: (req: RequestWithParams<Request>) => Promise<NextResponse>
 ) => {
   return async (req: Request) => {
     const body = await validateParams(req, schema);

@@ -1,4 +1,7 @@
 import trainingHistory from "@/modules/training-history";
+import { corsEndpoint } from "@/shared/decorators/cors-endpoint";
 
-export const GET = trainingHistory.controller.readOne;
-export const DELETE = trainingHistory.controller.delete;
+export const { GET, DELETE, OPTIONS } = corsEndpoint({
+  GET: trainingHistory.controller.readOne,
+  DELETE: trainingHistory.controller.delete,
+});

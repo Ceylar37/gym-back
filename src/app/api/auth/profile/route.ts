@@ -1,3 +1,6 @@
 import auth from "@/modules/auth";
+import { corsEndpoint } from "@/shared/decorators/cors-endpoint";
 
-export const GET = auth.controller.profile;
+export const { GET, OPTIONS } = corsEndpoint({
+  GET: auth.controller.profile,
+});

@@ -1,6 +1,6 @@
 import { validateBody } from "../utils/request/validate-body";
 
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
 export type RequestWithBody<
@@ -12,7 +12,7 @@ export type RequestWithBody<
 
 export const withBody = <Schema extends z.ZodSchema>(schema: Schema) => {
   return <Request extends NextRequest>(
-    cb: (req: RequestWithBody<Request, Schema>) => Promise<Response>
+    cb: (req: RequestWithBody<Request, Schema>) => Promise<NextResponse>
   ) => {
     return async (req: Request) => {
       const body = await validateBody(req, schema);
