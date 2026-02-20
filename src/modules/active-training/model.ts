@@ -1,11 +1,8 @@
-import { ErrorCode } from "@/shared/base/error-code";
-import {
-  exerciseSchema,
-  exerciseSchemaWithId,
-} from "@/shared/domain/model/exercise-schema";
-import { extendZodWithOpenApi } from "@anatine/zod-openapi";
+import { ErrorCode } from '@/shared/base/error-code';
+import { exerciseSchema, exerciseSchemaWithId } from '@/shared/domain/model/exercise-schema';
+import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
-import z from "zod";
+import z from 'zod';
 
 extendZodWithOpenApi(z);
 
@@ -14,61 +11,61 @@ const activeTrainingSchema = z
     dateStart: z.string(),
     name: z.string(),
     description: z.string(),
-    exercises: z.array(exerciseSchemaWithId),
+    exercises: z.array(exerciseSchemaWithId)
   })
   .strict()
   .openapi({
-    title: "ActiveTraining",
+    title: 'ActiveTraining'
   });
 const activeTrainingUpdateSchema = z
   .object({
     dateStart: z.string(),
     name: z.string(),
     description: z.string(),
-    exercises: z.array(exerciseSchema),
+    exercises: z.array(exerciseSchema)
   })
   .strict()
   .openapi({
-    title: "UpdateActiveTrainingBody",
+    title: 'UpdateActiveTrainingBody'
   });
 
 export const activeTrainingContract = {
   get: {
-    method: "GET" as const,
-    path: "/api/active-training",
+    method: 'GET' as const,
+    path: '/api/active-training',
     responses: {
       200: activeTrainingSchema,
-      404: z.enum([ErrorCode.NotFound]),
-    },
+      404: z.enum([ErrorCode.NotFound])
+    }
   },
   start: {
-    method: "POST" as const,
-    path: "/api/active-training/start",
+    method: 'POST' as const,
+    path: '/api/active-training/start',
     body: z.object({ id: z.string(), dateStart: z.string() }).strict().openapi({
-      title: "ActiveTrainingStartBody",
+      title: 'ActiveTrainingStartBody'
     }),
     responses: {
       200: activeTrainingSchema,
       404: z.enum([ErrorCode.NotFound]),
-      400: z.enum([ErrorCode.AlreadyExists]),
-    },
+      400: z.enum([ErrorCode.AlreadyExists])
+    }
   },
   update: {
-    method: "PATCH" as const,
-    path: "/api/active-training/update",
+    method: 'PATCH' as const,
+    path: '/api/active-training/update',
     body: activeTrainingUpdateSchema,
     responses: {
       200: activeTrainingSchema,
-      404: z.enum([ErrorCode.NotFound]),
-    },
+      404: z.enum([ErrorCode.NotFound])
+    }
   },
   end: {
-    method: "POST" as const,
-    path: "/api/active-training/end",
-    body: z.void(),
+    method: 'POST' as const,
+    path: '/api/active-training/end',
+    body: activeTrainingSchema,
     responses: {
       200: z.void(),
-      404: z.enum([ErrorCode.NotFound]),
-    },
-  },
+      404: z.enum([ErrorCode.NotFound])
+    }
+  }
 };
