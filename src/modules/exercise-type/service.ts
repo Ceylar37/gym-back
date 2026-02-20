@@ -1,10 +1,10 @@
-import { BaseError } from "@/shared/base/base-error";
-import { ErrorCode } from "@/shared/base/error-code";
-import { UserCrudService } from "@/shared/user-crud/user-crud.service";
+import { BaseError } from '@/shared/base/base-error';
+import { ErrorCode } from '@/shared/base/error-code';
+import { UserCrudService } from '@/shared/user-crud/user-crud.service';
 
-import { UserService } from "../user/user.service";
+import { UserService } from '../user/user.service';
 
-import { ExerciseTypeModel } from "./model";
+import { ExerciseTypeModel } from './model';
 
 const select = {
   id: true,
@@ -12,7 +12,7 @@ const select = {
   favorite: true,
   description: true,
   restTime: true,
-  muscleGroups: true,
+  muscleGroups: true
 };
 
 export class ExerciseTypeService extends UserCrudService<ExerciseTypeModel> {
@@ -23,17 +23,17 @@ export class ExerciseTypeService extends UserCrudService<ExerciseTypeModel> {
     super(exerciseTypeModel, select);
   }
 
-  async create(data: ExerciseTypeModel["createArgs"]) {
+  async create(data: ExerciseTypeModel['createArgs']) {
     return await this.exerciseTypeModel.create({
       data,
-      select,
+      select
     });
   }
 
   async readOne(id: string) {
     const exerciseType = await this.exerciseTypeModel.findUnique({
       where: { id },
-      select,
+      select
     });
     if (!exerciseType) {
       throw new BaseError(ErrorCode.NotFound, 404);
@@ -41,21 +41,21 @@ export class ExerciseTypeService extends UserCrudService<ExerciseTypeModel> {
     return exerciseType;
   }
 
-  async update({ id, ...data }: ExerciseTypeModel["updateArgs"]) {
+  async update({ id, ...data }: ExerciseTypeModel['updateArgs']) {
     return await this.exerciseTypeModel.update({
       where: {
-        id,
+        id
       },
       data,
-      select,
+      select
     });
   }
 
   async delete(id: string) {
     await this.exerciseTypeModel.delete({
       where: {
-        id,
-      },
+        id
+      }
     });
   }
 }

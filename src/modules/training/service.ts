@@ -1,8 +1,8 @@
-import { BaseError } from "@/shared/base/base-error";
-import { ErrorCode } from "@/shared/base/error-code";
-import { UserCrudService } from "@/shared/user-crud/user-crud.service";
+import { BaseError } from '@/shared/base/base-error';
+import { ErrorCode } from '@/shared/base/error-code';
+import { UserCrudService } from '@/shared/user-crud/user-crud.service';
 
-import { TrainingModel } from "./model";
+import { TrainingModel } from './model';
 
 const select = {
   id: true,
@@ -16,9 +16,9 @@ const select = {
       favorite: true,
       description: true,
       restTime: true,
-      muscleGroups: true,
-    },
-  },
+      muscleGroups: true
+    }
+  }
 };
 
 export class TrainingService extends UserCrudService<TrainingModel> {
@@ -26,22 +26,22 @@ export class TrainingService extends UserCrudService<TrainingModel> {
     super(trainingModel, select);
   }
 
-  async create({ exerciseTypes, ...data }: TrainingModel["createArgs"]) {
+  async create({ exerciseTypes, ...data }: TrainingModel['createArgs']) {
     return await this.trainingModel.create({
       data: {
         ...data,
         exerciseTypes: {
-          connect: exerciseTypes,
-        },
+          connect: exerciseTypes
+        }
       },
-      select,
+      select
     });
   }
 
   async readOne(id: string) {
     const training = await this.trainingModel.findUnique({
       where: { id },
-      select,
+      select
     });
     if (!training) {
       throw new BaseError(ErrorCode.NotFound, 404);
@@ -49,18 +49,18 @@ export class TrainingService extends UserCrudService<TrainingModel> {
     return training;
   }
 
-  async update({ id, exerciseTypes, ...data }: TrainingModel["updateArgs"]) {
+  async update({ id, exerciseTypes, ...data }: TrainingModel['updateArgs']) {
     return await this.trainingModel.update({
       where: {
-        id,
+        id
       },
       data: {
         ...data,
         exerciseTypeIds: {
-          set: exerciseTypes.map(({ id }) => id),
-        },
+          set: exerciseTypes.map(({ id }) => id)
+        }
       },
-      select,
+      select
     });
   }
 
@@ -69,19 +69,19 @@ export class TrainingService extends UserCrudService<TrainingModel> {
 
     await this.trainingModel.update({
       where: {
-        id,
+        id
       },
       data: {
         exerciseTypes: {
-          disconnect: training.exerciseTypes.map(({ id }) => ({ id })),
-        },
-      },
+          disconnect: training.exerciseTypes.map(({ id }) => ({ id }))
+        }
+      }
     });
 
     await this.trainingModel.delete({
       where: {
-        id,
-      },
+        id
+      }
     });
   }
 }

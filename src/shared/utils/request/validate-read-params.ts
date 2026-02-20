@@ -1,12 +1,10 @@
-import { BaseError } from "@/shared/base/base-error";
-import { ReadArgs, readParamsSchema } from "@/shared/domain/model/read-params";
+import { BaseError } from '@/shared/base/base-error';
+import { ReadArgs, readParamsSchema } from '@/shared/domain/model/read-params';
 
-import { NextRequest } from "next/server";
-import z from "zod";
+import { NextRequest } from 'next/server';
+import z from 'zod';
 
-export const validateReadParams = <Request extends NextRequest>(
-  req: Request
-): ReadArgs => {
+export const validateReadParams = <Request extends NextRequest>(req: Request): ReadArgs => {
   const params = req.nextUrl.searchParams;
 
   try {
@@ -15,16 +13,16 @@ export const validateReadParams = <Request extends NextRequest>(
     if (data.filter) {
       data.filter = JSON.parse(data.filter);
     }
+    if (data.orderBy) {
+      data.orderBy = JSON.parse(data.orderBy);
+    }
 
     return data;
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
-      throw new BaseError(
-        `${error.issues[0].path}: ${error.issues[0].message}`,
-        422
-      );
+      throw new BaseError(`${error.issues[0].path}: ${error.issues[0].message}`, 422);
     }
-    if (error && typeof error === "object" && "message" in error) {
+    if (error && typeof error === 'object' && 'message' in error) {
       throw new BaseError(JSON.stringify(error.message), 422);
     }
     throw new BaseError(JSON.stringify(error), 422);
