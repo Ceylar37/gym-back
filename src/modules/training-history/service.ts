@@ -1,46 +1,44 @@
-import { BaseService } from "@/shared/base/base.service";
-import { BaseError } from "@/shared/base/base-error";
-import { ErrorCode } from "@/shared/base/error-code";
-import { ReadArgs } from "@/shared/domain/model/read-params";
+import { BaseService } from '@/shared/base/base.service';
+import { BaseError } from '@/shared/base/base-error';
+import { ErrorCode } from '@/shared/base/error-code';
+import { ReadArgs } from '@/shared/domain/model/read-params';
 
-import { TrainingHistoryModel } from "./model";
+import { TrainingHistoryModel } from './model';
 
 const select = {
   id: true,
   name: true,
   description: true,
   dateStart: true,
-  exercises: true,
+  exercises: true
 };
 
 export class TrainingHistoryService extends BaseService {
-  constructor(
-    private readonly trainingHistoryModel: typeof prisma.trainingHistory
-  ) {
+  constructor(private readonly trainingHistoryModel: typeof prisma.trainingHistory) {
     super();
   }
 
   private formatTrainingHistory(
-    trainingHistory: Omit<TrainingHistoryModel["base"], "dateStart"> & {
+    trainingHistory: Omit<TrainingHistoryModel['base'], 'dateStart'> & {
       dateStart: Date;
     }
-  ): TrainingHistoryModel["base"] {
+  ): TrainingHistoryModel['base'] {
     return {
       ...trainingHistory,
-      dateStart: trainingHistory.dateStart.toISOString(),
+      dateStart: trainingHistory.dateStart.toISOString()
     };
   }
 
-  async create(data: TrainingHistoryModel["createArgs"]) {
+  async create(data: TrainingHistoryModel['createArgs']) {
     return this.formatTrainingHistory(
       await this.trainingHistoryModel.create({
         data,
-        select,
+        select
       })
     );
   }
 
-  async read(userId: string, { filter, limit, page }: ReadArgs) {
+  async read(userId: string, { filter, limit, page, orderBy }: ReadArgs) {
     // const take = page && limit ? limit : undefined;
     // const skip = page && limit ? (page - 1) * limit : undefined;
     let take;
@@ -68,7 +66,7 @@ export class TrainingHistoryService extends BaseService {
 
     const where = {
       ...filter,
-      userId,
+      userId
     };
 
     const content = (
@@ -77,11 +75,12 @@ export class TrainingHistoryService extends BaseService {
         take,
         skip,
         select,
+        orderBy
       })
     ).map(this.formatTrainingHistory);
 
     const count = await this.trainingHistoryModel.count({
-      where,
+      where
     });
 
     return {
@@ -89,15 +88,15 @@ export class TrainingHistoryService extends BaseService {
       meta: {
         limit: take === undefined ? count : take,
         page: skip === undefined ? 1 : page,
-        pages: take === undefined ? 1 : Math.ceil(count / take),
-      },
+        pages: take === undefined ? 1 : Math.ceil(count / take)
+      }
     };
   }
 
   async readOne(id: string) {
     const trainingHistory = await this.trainingHistoryModel.findUnique({
       where: { id },
-      select,
+      select
     });
     if (!trainingHistory) {
       throw new BaseError(ErrorCode.NotFound, 404);
@@ -105,14 +104,14 @@ export class TrainingHistoryService extends BaseService {
     return this.formatTrainingHistory(trainingHistory);
   }
 
-  async update({ id, ...data }: TrainingHistoryModel["updateArgs"]) {
+  async update({ id, ...data }: TrainingHistoryModel['updateArgs']) {
     return this.formatTrainingHistory(
       await this.trainingHistoryModel.update({
         where: {
-          id,
+          id
         },
         data,
-        select,
+        select
       })
     );
   }
@@ -120,8 +119,8 @@ export class TrainingHistoryService extends BaseService {
   async delete(id: string) {
     await this.trainingHistoryModel.delete({
       where: {
-        id,
-      },
+        id
+      }
     });
   }
 }
