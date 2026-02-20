@@ -1,14 +1,14 @@
-import { BaseService } from "@/shared/base/base.service";
-import { BaseError } from "@/shared/base/base-error";
-import { ErrorCode } from "@/shared/base/error-code";
+import { BaseService } from '@/shared/base/base.service';
+import { BaseError } from '@/shared/base/base-error';
+import { ErrorCode } from '@/shared/base/error-code';
 
-import { TrainingService } from "../training/service";
-import { TrainingHistoryService } from "../training-history/service";
-import { UserService } from "../user/user.service";
+import { TrainingService } from '../training/service';
+import { TrainingHistoryService } from '../training-history/service';
+import { UserService } from '../user/user.service';
 
-import { activeTrainingContract } from "./model";
+import { activeTrainingContract } from './model';
 
-import { z } from "zod";
+import { z } from 'zod';
 
 export class ActiveTrainingService extends BaseService {
   constructor(
@@ -20,17 +20,10 @@ export class ActiveTrainingService extends BaseService {
     super();
   }
 
-  async start({
-    id,
-    dateStart,
-    userId,
-  }: z.infer<typeof activeTrainingContract.start.body> & { userId: string }) {
-    const { exerciseTypes, ...training } = await this.trainingService.readOne(
-      id
-    );
+  async start({ id, dateStart, userId }: z.infer<typeof activeTrainingContract.start.body> & { userId: string }) {
+    const { exerciseTypes, ...training } = await this.trainingService.readOne(id);
 
-    const { activeTraining: currentActiveTraining } =
-      await this.userService.getOne(userId);
+    const { activeTraining: currentActiveTraining } = await this.userService.getOne(userId);
 
     if (currentActiveTraining) {
       throw new BaseError(ErrorCode.AlreadyExists, 400);
@@ -38,7 +31,7 @@ export class ActiveTrainingService extends BaseService {
 
     const { activeTraining } = await this.userModel.update({
       where: {
-        id: userId,
+        id: userId
       },
       data: {
         activeTraining: {
@@ -53,17 +46,17 @@ export class ActiveTrainingService extends BaseService {
               {
                 repeatCount: 0,
                 weight: 0,
-                done: false,
-              },
+                done: false
+              }
             ],
             muscleGroups: exerciseType.muscleGroups,
-            useCustomSets: false,
-          })),
-        },
+            useCustomSets: false
+          }))
+        }
       },
       select: {
-        activeTraining: true,
-      },
+        activeTraining: true
+      }
     });
     return activeTraining;
   }
@@ -72,8 +65,7 @@ export class ActiveTrainingService extends BaseService {
     userId,
     ...newActiveTraining
   }: z.infer<typeof activeTrainingContract.update.body> & { userId: string }) {
-    const { activeTraining: currentActiveTraining } =
-      await this.userService.getOne(userId);
+    const { activeTraining: currentActiveTraining } = await this.userService.getOne(userId);
 
     if (!currentActiveTraining) {
       throw new BaseError(ErrorCode.NotFound, 404);
@@ -81,45 +73,45 @@ export class ActiveTrainingService extends BaseService {
 
     const { activeTraining } = await this.userModel.update({
       where: {
-        id: userId,
+        id: userId
       },
       data: {
-        activeTraining: newActiveTraining,
+        activeTraining: newActiveTraining
       },
       select: {
-        activeTraining: true,
-      },
+        activeTraining: true
+      }
     });
     return activeTraining;
   }
 
   async end({ userId }: { userId: string }) {
-    const { activeTraining: currentActiveTraining } =
-      await this.userService.getOne(userId);
+    const { activeTraining: currentActiveTraining } = await this.userService.getOne(userId);
 
     if (!currentActiveTraining) {
       throw new BaseError(ErrorCode.NotFound, 404);
     }
 
-    await this.trainingHistoryService.create({
+    const trainingHistory = await this.trainingHistoryService.create({
       userId,
       ...currentActiveTraining,
-      dateStart: currentActiveTraining.dateStart.toISOString(),
+      dateStart: currentActiveTraining.dateStart.toISOString()
     });
 
     await this.userModel.update({
       where: {
-        id: userId,
+        id: userId
       },
       data: {
-        activeTraining: null,
-      },
+        activeTraining: null
+      }
     });
+
+    return trainingHistory;
   }
 
   async getActiveTraining(userId: string) {
-    const { activeTraining: currentActiveTraining } =
-      await this.userService.getOne(userId);
+    const { activeTraining: currentActiveTraining } = await this.userService.getOne(userId);
 
     if (!currentActiveTraining) {
       throw new BaseError(ErrorCode.NotFound, 404);
