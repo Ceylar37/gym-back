@@ -41,5 +41,10 @@ export const ActiveTrainingController = controllerDecorator(
     get = withAuth(async (req) => {
       return NextResponse.json(await this.activeTrainingService.getActiveTraining(req.getUser().id));
     });
+
+    cancel = withAuth(async (req) => {
+      await this.activeTrainingService.cancel({ userId: req.getUser().id });
+      return new NextResponse();
+    });
   }
 );

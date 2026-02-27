@@ -119,4 +119,21 @@ export class ActiveTrainingService extends BaseService {
 
     return currentActiveTraining;
   }
+
+  async cancel({ userId }: { userId: string }) {
+    const { activeTraining: currentActiveTraining } = await this.userService.getOne(userId);
+
+    if (!currentActiveTraining) {
+      throw new BaseError(ErrorCode.NotFound, 404);
+    }
+
+    await this.userModel.update({
+      where: {
+        id: userId
+      },
+      data: {
+        activeTraining: null
+      }
+    });
+  }
 }
