@@ -75,5 +75,17 @@ export const activeTrainingContract = {
       200: z.void(),
       404: z.enum([ErrorCode.NotFound])
     }
+  },
+  repeat: {
+    method: 'POST' as const,
+    path: '/api/active-training/repeat',
+    body: z
+      .object({ trainingHistoryId: z.string(), dateStart: z.string() })
+      .openapi({ title: 'ActiveTrainingRepeatParams' }),
+    responses: {
+      200: activeTrainingSchema,
+      404: z.enum([ErrorCode.NotFound]),
+      400: z.enum([ErrorCode.AlreadyExists])
+    }
   }
 };

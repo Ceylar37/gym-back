@@ -46,5 +46,15 @@ export const ActiveTrainingController = controllerDecorator(
       await this.activeTrainingService.cancel({ userId: req.getUser().id });
       return new NextResponse();
     });
+
+    repeat = withAuth(async (req) => {
+      const body = await validateBody(req, activeTrainingContract.repeat.body);
+      return NextResponse.json(
+        await this.activeTrainingService.repeat({
+          ...body,
+          userId: req.getUser().id
+        })
+      );
+    });
   }
 );

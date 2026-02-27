@@ -136,4 +136,52 @@ export class ActiveTrainingService extends BaseService {
       }
     });
   }
+
+  async repeat({
+    trainingHistoryId,
+    dateStart,
+    userId
+  }: {
+    trainingHistoryId: string;
+    userId: string;
+    dateStart: string;
+  }) {
+    const trainingHistory = await this.trainingHistoryService.readOne(trainingHistoryId);
+
+    if (!trainingHistory) {
+      throw new BaseError(ErrorCode.NotFound, 404);
+    }
+
+    const training = {
+      name: trainingHistory.name,
+      description: trainingHistory.description,
+      exercises: trainingHistory.exercises.map((exercise) => ({
+        ...exercise,
+        sets: exercise.sets.map((set) => ({
+          ...set,
+          done: false
+        }))
+      })),
+      dateStart
+    };
+
+    const { activeTraining: currentActiveTraining } = await this.userService.getOne(userId);
+
+    if (currentActiveTraining) {
+      throw new BaseError(ErrorCode.AlreadyExists, 400);
+    }
+
+    const { activeTraining } = await this.userModel.update({
+      where: {
+        id: userId
+      },
+      data: {
+        activeTraining: training
+      },
+      select: {
+        activeTraining: true
+      }
+    });
+    return activeTraining;
+  }
 }
