@@ -71,6 +71,7 @@ export const activeTrainingContract = {
   cancel: {
     method: 'POST' as const,
     path: '/api/active-training/cancel',
+    body: z.void(),
     responses: {
       200: z.void(),
       404: z.enum([ErrorCode.NotFound])
