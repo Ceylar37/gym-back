@@ -1,9 +1,9 @@
-import { CreateUserArgs, LoginUserArgs } from "@/modules/user/user.model";
-import { UserService } from "@/modules/user/user.service";
-import { BaseService } from "@/shared/base/base.service";
-import { BaseError } from "@/shared/base/base-error";
-import { ErrorCode } from "@/shared/base/error-code";
-import { compare } from "@/shared/domain/bcrypt";
+import { CreateUserArgs, LoginUserArgs } from '@/modules/user/user.model';
+import { UserService } from '@/modules/user/user.service';
+import { BaseService } from '@/shared/base/base.service';
+import { BaseError } from '@/shared/base/base-error';
+import { ErrorCode } from '@/shared/base/error-code';
+import { compare } from '@/shared/domain/bcrypt';
 
 export class AuthService extends BaseService {
   constructor(private userService: UserService) {
@@ -19,21 +19,21 @@ export class AuthService extends BaseService {
 
     const createdUser = await this.userService.create({
       email,
-      password,
+      password
     });
 
     const accessToken = await this.userService.createAccessToken({
       id: createdUser.id,
-      email: createdUser.email,
+      email: createdUser.email
     });
     const refreshToken = await this.userService.createRefreshToken({
       id: createdUser.id,
-      email: createdUser.email,
+      email: createdUser.email
     });
 
     return {
       accessToken,
-      refreshToken,
+      refreshToken
     };
   }
 
@@ -50,16 +50,16 @@ export class AuthService extends BaseService {
 
     const accessToken = await this.userService.createAccessToken({
       id: user.id,
-      email: user.email,
+      email: user.email
     });
     const refreshToken = await this.userService.createRefreshToken({
       id: user.id,
-      email: user.email,
+      email: user.email
     });
 
     return {
       accessToken,
-      refreshToken,
+      refreshToken
     };
   }
 

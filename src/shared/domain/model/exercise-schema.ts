@@ -1,6 +1,6 @@
-import { setSchema } from "./set-schema";
+import { setSchema } from './set-schema';
 
-import { z } from "zod";
+import { z } from 'zod';
 
 export const exerciseSchema = z.object({
   name: z.string(),
@@ -8,7 +8,7 @@ export const exerciseSchema = z.object({
   restTime: z.number(),
   sets: z.array(setSchema),
   muscleGroups: z.array(z.string()),
-  useCustomSets: z.boolean(),
+  useCustomSets: z.boolean()
 });
 export const exerciseSchemaWithId = z.object({
   id: z.string(),
@@ -17,5 +17,5 @@ export const exerciseSchemaWithId = z.object({
   restTime: z.number(),
   sets: z.array(setSchema),
   muscleGroups: z.array(z.string()),
-  useCustomSets: z.boolean(),
+  useCustomSets: z.boolean()
 });

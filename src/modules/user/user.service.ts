@@ -1,46 +1,41 @@
-import { User } from "@/generated/prisma/client";
-import { ErrorCode } from "@/shared/base/error-code";
-import { hash } from "@/shared/domain/bcrypt";
-import { sign, verify } from "@/shared/domain/jwt";
-import prisma from "@/shared/domain/prisma";
+import { User } from '@/generated/prisma/client';
+import { ErrorCode } from '@/shared/base/error-code';
+import { hash } from '@/shared/domain/bcrypt';
+import { sign, verify } from '@/shared/domain/jwt';
+import prisma from '@/shared/domain/prisma';
 
-import { BaseService } from "../../shared/base/base.service";
-import { BaseError } from "../../shared/base/base-error";
+import { BaseService } from '../../shared/base/base.service';
+import { BaseError } from '../../shared/base/base-error';
 
-import {
-  CreateUserArgs,
-  RemoveRefreshTokenArgs,
-  UpdateUserTokenArgs,
-  UserModel,
-} from "./user.model";
+import { CreateUserArgs, RemoveRefreshTokenArgs, UpdateUserTokenArgs, UserModel } from './user.model';
 
-import z from "zod";
+import z from 'zod';
 
 enum Token {
-  Access = "accessTokens",
-  Refresh = "refreshTokens",
+  Access = 'accessTokens',
+  Refresh = 'refreshTokens'
 }
 
 const PRIVATE_KEYS = {
   [Token.Access]: process.env.ACCESS_PRIVATE_KEY as string,
-  [Token.Refresh]: process.env.REFRESH_PRIVATE_KEY as string,
+  [Token.Refresh]: process.env.REFRESH_PRIVATE_KEY as string
 };
 
 const LIFE_TIMES = {
-  [Token.Access]: "30m",
-  [Token.Refresh]: "30d",
+  [Token.Access]: '1m',
+  [Token.Refresh]: '30d'
 } as const;
 
 if (!PRIVATE_KEYS[Token.Access]) {
-  throw new Error("ACCESS_PRIVATE_KEY is not defined");
+  throw new Error('ACCESS_PRIVATE_KEY is not defined');
 }
 if (!PRIVATE_KEYS[Token.Refresh]) {
-  throw new Error("REFRESH_PRIVATE_KEY is not defined");
+  throw new Error('REFRESH_PRIVATE_KEY is not defined');
 }
 
 const userDataSchema = z.object({
   id: z.string(),
-  email: z.string(),
+  email: z.string()
 });
 
 export class UserService extends BaseService {
@@ -50,17 +45,17 @@ export class UserService extends BaseService {
 
   async createAccessToken(payload: UpdateUserTokenArgs) {
     const token = sign(payload, PRIVATE_KEYS[Token.Access], {
-      expiresIn: LIFE_TIMES[Token.Access],
+      expiresIn: LIFE_TIMES[Token.Access]
     });
     await this.userModel.update({
       where: {
-        id: payload.id,
+        id: payload.id
       },
       data: {
         accessTokens: {
-          push: token,
-        },
-      },
+          push: token
+        }
+      }
     });
     this.clearExpiredTokens(payload.id, Token.Access);
     return token;
@@ -68,17 +63,17 @@ export class UserService extends BaseService {
 
   async createRefreshToken(payload: UpdateUserTokenArgs) {
     const token = sign(payload, PRIVATE_KEYS[Token.Refresh], {
-      expiresIn: LIFE_TIMES[Token.Refresh],
+      expiresIn: LIFE_TIMES[Token.Refresh]
     });
     await this.userModel.update({
       where: {
-        id: payload.id,
+        id: payload.id
       },
       data: {
         refreshTokens: {
-          push: token,
-        },
-      },
+          push: token
+        }
+      }
     });
     this.clearExpiredTokens(payload.id, Token.Refresh);
     return token;
@@ -87,12 +82,12 @@ export class UserService extends BaseService {
   async clearExpiredTokens(id: string, type: Token) {
     const user = await this.userModel.findUnique({
       where: {
-        id,
+        id
       },
       select: {
         accessTokens: true,
-        refreshTokens: true,
-      },
+        refreshTokens: true
+      }
     });
 
     if (!user) {
@@ -101,19 +96,19 @@ export class UserService extends BaseService {
 
     await this.userModel.update({
       where: {
-        id,
+        id
       },
       data: {
         [type]: {
-          set: user[type].filter((token) => verify(token, PRIVATE_KEYS[type])),
-        },
-      },
+          set: user[type].filter((token) => verify(token, PRIVATE_KEYS[type]))
+        }
+      }
     });
   }
 
   async create(user: CreateUserArgs) {
     const userData = {
-      ...user,
+      ...user
     };
 
     if (user.password) {
@@ -121,15 +116,15 @@ export class UserService extends BaseService {
     }
 
     return await this.userModel.create({
-      data: userData,
+      data: userData
     });
   }
 
   async findByEmail(email: string) {
     return await this.userModel.findFirst({
       where: {
-        email,
-      },
+        email
+      }
     });
   }
 
@@ -143,16 +138,15 @@ export class UserService extends BaseService {
       throw new BaseError(ErrorCode.Unauthorized, 401);
     }
 
-    const { success, data: userDataParsed } =
-      userDataSchema.safeParse(userData);
+    const { success, data: userDataParsed } = userDataSchema.safeParse(userData);
     if (!success) {
       throw new BaseError(ErrorCode.Unauthorized, 401);
     }
 
     const userFromDb = await this.userModel.findUnique({
       where: {
-        id: userDataParsed.id,
-      },
+        id: userDataParsed.id
+      }
     });
     if (!userFromDb || !userFromDb.accessTokens.includes(token)) {
       throw new BaseError(ErrorCode.Unauthorized, 401);
@@ -171,16 +165,15 @@ export class UserService extends BaseService {
       throw new BaseError(ErrorCode.Unauthorized, 401);
     }
 
-    const { success, data: userDataParsed } =
-      userDataSchema.safeParse(userData);
+    const { success, data: userDataParsed } = userDataSchema.safeParse(userData);
     if (!success) {
       throw new BaseError(ErrorCode.Unauthorized, 401);
     }
 
     const userFromDb = await this.userModel.findUnique({
       where: {
-        id: userDataParsed.id,
-      },
+        id: userDataParsed.id
+      }
     });
     if (!userFromDb || !userFromDb.refreshTokens.includes(token)) {
       throw new BaseError(ErrorCode.Unauthorized, 401);
@@ -194,11 +187,11 @@ export class UserService extends BaseService {
 
     const newAccessToken = await this.createAccessToken({
       id: user.id,
-      email: user.email,
+      email: user.email
     });
     const newRefreshToken = await this.createRefreshToken({
       id: user.id,
-      email: user.email,
+      email: user.email
     });
 
     // clear previous refresh token
@@ -210,11 +203,11 @@ export class UserService extends BaseService {
   async removeRefreshToken({ id, refreshToken }: RemoveRefreshTokenArgs) {
     const user = await this.userModel.findUnique({
       where: {
-        id,
+        id
       },
       select: {
-        refreshTokens: true,
-      },
+        refreshTokens: true
+      }
     });
 
     if (!user) {
@@ -223,30 +216,28 @@ export class UserService extends BaseService {
 
     await this.userModel.update({
       where: {
-        id,
+        id
       },
       data: {
-        refreshTokens: user.refreshTokens.filter(
-          (token) => token !== refreshToken
-        ),
-      },
+        refreshTokens: user.refreshTokens.filter((token) => token !== refreshToken)
+      }
     });
   }
 
-  async update({ id, ...data }: UserModel["updateArgs"]) {
+  async update({ id, ...data }: UserModel['updateArgs']) {
     return await this.userModel.update({
       where: {
-        id,
+        id
       },
-      data,
+      data
     });
   }
 
   async getOne(id: string) {
     const user = await this.userModel.findUnique({
       where: {
-        id,
-      },
+        id
+      }
     });
 
     if (!user) {

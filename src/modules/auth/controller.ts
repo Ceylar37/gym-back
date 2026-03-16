@@ -1,12 +1,12 @@
-import { BaseController } from "@/shared/base/base.controller";
-import { controllerDecorator } from "@/shared/base/controller-decorator";
-import { withAuth } from "@/shared/decorators/with-auth";
-import { withBody } from "@/shared/decorators/with-body";
+import { BaseController } from '@/shared/base/base.controller';
+import { controllerDecorator } from '@/shared/base/controller-decorator';
+import { withAuth } from '@/shared/decorators/with-auth';
+import { withBody } from '@/shared/decorators/with-body';
 
-import { authContract } from "./model";
-import { AuthService } from "./service";
+import { authContract } from './model';
+import { AuthService } from './service';
 
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
 export const AuthController = controllerDecorator(
   class AuthController extends BaseController {
@@ -33,7 +33,7 @@ export const AuthController = controllerDecorator(
     profile = withAuth(async (req) => {
       const userData = {
         id: req.getUser().id,
-        email: req.getUser().email,
+        email: req.getUser().email
       };
       return NextResponse.json(userData);
     });

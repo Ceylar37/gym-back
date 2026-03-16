@@ -1,6 +1,6 @@
-import activeTraining from "@/modules/active-training";
-import { corsEndpoint } from "@/shared/decorators/cors-endpoint";
+import activeTraining from '@/modules/active-training';
+import { corsEndpoint } from '@/shared/decorators/cors-endpoint';
 
 export const { POST, OPTIONS } = corsEndpoint({
-  POST: activeTraining.controller.end,
+  POST: activeTraining.controller.end
 });

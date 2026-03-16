@@ -1,11 +1,11 @@
-import training from "@/modules/training";
-import user from "@/modules/user";
-import prisma from "@/shared/domain/prisma";
+import training from '@/modules/training';
+import user from '@/modules/user';
+import prisma from '@/shared/domain/prisma';
 
-import trainingHistory from "../training-history";
+import trainingHistory from '../training-history';
 
-import { ActiveTrainingController } from "./controller";
-import { ActiveTrainingService } from "./service";
+import { ActiveTrainingController } from './controller';
+import { ActiveTrainingService } from './service';
 
 const activeTrainingService = new ActiveTrainingService(
   prisma.user,
@@ -13,13 +13,11 @@ const activeTrainingService = new ActiveTrainingService(
   training.service,
   trainingHistory.service
 );
-const activeTrainingController = new ActiveTrainingController(
-  activeTrainingService
-);
+const activeTrainingController = new ActiveTrainingController(activeTrainingService);
 const activeTraining = {
   service: activeTrainingService,
-  controller: activeTrainingController,
+  controller: activeTrainingController
 };
 
 export default activeTraining;
-export { activeTrainingContract } from "./model";
+export { activeTrainingContract } from './model';

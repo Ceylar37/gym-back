@@ -1,19 +1,17 @@
-import { withCors } from "./with-cors";
+import { withCors } from './with-cors';
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 enum Method {
-  GET = "GET",
-  POST = "POST",
-  PATCH = "PATCH",
-  PUT = "PUT",
-  DELETE = "DELETE",
-  OPTIONS = "OPTIONS",
+  GET = 'GET',
+  POST = 'POST',
+  PATCH = 'PATCH',
+  PUT = 'PUT',
+  DELETE = 'DELETE',
+  OPTIONS = 'OPTIONS'
 }
 
-type Endpoint = Partial<
-  Record<Method, (req: NextRequest) => Promise<NextResponse>>
->;
+type Endpoint = Partial<Record<Method, (req: NextRequest) => Promise<NextResponse>>>;
 
 export const corsEndpoint = <E extends Endpoint>(
   endpoint: E
@@ -24,8 +22,8 @@ export const corsEndpoint = <E extends Endpoint>(
     corsEndpoint[key as Method] = withCors(value);
   });
 
-  if (!corsEndpoint["OPTIONS"]) {
-    corsEndpoint["OPTIONS"] = withCors(async () => {
+  if (!corsEndpoint['OPTIONS']) {
+    corsEndpoint['OPTIONS'] = withCors(async () => {
       return new NextResponse(undefined, { status: 204 });
     });
   }

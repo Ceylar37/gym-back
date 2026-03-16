@@ -1,8 +1,8 @@
-import { createCrudContract } from "@/shared/domain/model/create-crud-contract";
-import { CreateUserCrudModel } from "@/shared/user-crud/user-crud.model";
-import { extendZodWithOpenApi } from "@anatine/zod-openapi";
+import { createCrudContract } from '@/shared/domain/model/create-crud-contract';
+import { CreateUserCrudModel } from '@/shared/user-crud/user-crud.model';
+import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
-import { z } from "zod";
+import { z } from 'zod';
 
 extendZodWithOpenApi(z);
 
@@ -19,12 +19,12 @@ const trainingSchema = z
         favorite: z.boolean(),
         description: z.string(),
         muscleGroups: z.array(z.string()),
-        restTime: z.number(),
+        restTime: z.number()
       })
-    ),
+    )
   })
   .openapi({
-    title: "Training",
+    title: 'Training'
   });
 const trainingCreateSchema = z
   .object({
@@ -34,13 +34,13 @@ const trainingCreateSchema = z
     exerciseTypes: z
       .array(
         z.object({
-          id: z.string(),
+          id: z.string()
         })
       )
-      .min(1),
+      .min(1)
   })
   .openapi({
-    title: "TrainingCreateBody",
+    title: 'TrainingCreateBody'
   });
 const trainingUpdateSchema = z
   .object({
@@ -51,19 +51,19 @@ const trainingUpdateSchema = z
     exerciseTypes: z
       .array(
         z.object({
-          id: z.string(),
+          id: z.string()
         })
       )
-      .min(1),
+      .min(1)
   })
   .openapi({
-    title: "TrainingUpdateBody",
+    title: 'TrainingUpdateBody'
   });
 
-export const trainingContract = createCrudContract("training", {
+export const trainingContract = createCrudContract('training', {
   base: trainingSchema,
   create: trainingCreateSchema,
-  update: trainingUpdateSchema,
+  update: trainingUpdateSchema
 });
 
 export type TrainingModel = CreateUserCrudModel<{

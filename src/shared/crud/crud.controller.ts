@@ -1,19 +1,19 @@
-import { BaseController } from "@/shared/base/base.controller";
-import { BaseError } from "@/shared/base/base-error";
-import { controllerDecorator } from "@/shared/base/controller-decorator";
-import { ErrorCode } from "@/shared/base/error-code";
-import { withAuth } from "@/shared/decorators/with-auth";
-import { withBody } from "@/shared/decorators/with-body";
+import { BaseController } from '@/shared/base/base.controller';
+import { BaseError } from '@/shared/base/base-error';
+import { controllerDecorator } from '@/shared/base/controller-decorator';
+import { ErrorCode } from '@/shared/base/error-code';
+import { withAuth } from '@/shared/decorators/with-auth';
+import { withBody } from '@/shared/decorators/with-body';
 
-import { CrudContract, CrudModel } from "./crud.model";
+import { CrudContract, CrudModel } from './crud.model';
 
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
 export interface CrudService<T extends CrudModel> {
-  create: (data: T["createArgs"]) => Promise<T["base"]>;
-  read: () => Promise<T["base"][]>;
-  readOne: (id: string) => Promise<T["base"]>;
-  update: (data: T["updateArgs"]) => Promise<T["base"]>;
+  create: (data: T['createArgs']) => Promise<T['base']>;
+  read: () => Promise<T['base'][]>;
+  readOne: (id: string) => Promise<T['base']>;
+  update: (data: T['updateArgs']) => Promise<T['base']>;
   delete: (id: string) => Promise<void>;
 }
 
@@ -37,13 +37,13 @@ export const CrudController = controllerDecorator(
         meta: {
           limit: 25,
           page: 1,
-          pages: 10,
-        },
+          pages: 10
+        }
       });
     });
 
     readOne = withAuth(async (req) => {
-      const id = req.url.split("/").pop();
+      const id = req.url.split('/').pop();
       if (!id) {
         throw new BaseError(ErrorCode.NotUrlIdProvided, 422);
       }
@@ -58,7 +58,7 @@ export const CrudController = controllerDecorator(
     );
 
     delete = withAuth(async (req) => {
-      const id = req.url.split("/").pop();
+      const id = req.url.split('/').pop();
       if (!id) {
         throw new BaseError(ErrorCode.NotUrlIdProvided, 422);
       }

@@ -1,8 +1,8 @@
-import { Prisma } from "@/generated/prisma";
+import { Prisma } from '@/generated/prisma';
 
-import { CrudModel } from "../crud/crud.model";
+import { CrudModel } from '../crud/crud.model';
 
-import { ZodSchema } from "zod";
+import { ZodSchema } from 'zod';
 
 export interface UserCrudModel {
   base: unknown;
@@ -15,11 +15,11 @@ export interface UserCrudModel {
 }
 
 export interface CreateUserCrudModel<T extends CrudModel> {
-  base: T["base"];
-  createArgs: T["createArgs"] & {
+  base: T['base'];
+  createArgs: T['createArgs'] & {
     userId: string;
   };
-  updateArgs: T["updateArgs"] & {
+  updateArgs: T['updateArgs'] & {
     id: string;
     userId: string;
   };

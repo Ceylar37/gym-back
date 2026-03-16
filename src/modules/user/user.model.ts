@@ -1,4 +1,4 @@
-import { Prisma, User } from "@/generated/prisma";
+import { Prisma, User } from '@/generated/prisma';
 
 export interface UpdateUserTokenArgs {
   id: string;

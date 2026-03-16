@@ -1,8 +1,8 @@
-import { extendZodWithOpenApi } from "@anatine/zod-openapi";
+import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
-import { ErrorCode } from "./error-code";
+import { ErrorCode } from './error-code';
 
-import { z } from "zod";
+import { z } from 'zod';
 
 extendZodWithOpenApi(z);
 
@@ -15,6 +15,4 @@ export class BaseError extends Error {
   }
 }
 
-export const baseErrorSchema = z
-  .object({ message: z.string(), status: z.number() })
-  .openapi({ title: "BaseError" });
+export const baseErrorSchema = z.object({ message: z.string(), status: z.number() }).openapi({ title: 'BaseError' });

@@ -1,8 +1,8 @@
-import { createCrudContract } from "@/shared/domain/model/create-crud-contract";
-import { CreateUserCrudModel } from "@/shared/user-crud/user-crud.model";
-import { extendZodWithOpenApi } from "@anatine/zod-openapi";
+import { createCrudContract } from '@/shared/domain/model/create-crud-contract';
+import { CreateUserCrudModel } from '@/shared/user-crud/user-crud.model';
+import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
-import { z } from "zod";
+import { z } from 'zod';
 
 extendZodWithOpenApi(z);
 
@@ -13,10 +13,10 @@ const exerciseTypeSchema = z
     favorite: z.boolean(),
     description: z.string(),
     restTime: z.number(),
-    muscleGroups: z.array(z.string()),
+    muscleGroups: z.array(z.string())
   })
   .openapi({
-    title: "ExerciseType",
+    title: 'ExerciseType'
   });
 const exerciseTypeCreateSchema = z
   .object({
@@ -24,11 +24,11 @@ const exerciseTypeCreateSchema = z
     favorite: z.boolean().optional(),
     description: z.string().optional(),
     restTime: z.number().optional(),
-    muscleGroups: z.array(z.string()).optional(),
+    muscleGroups: z.array(z.string()).optional()
   })
   .strict()
   .openapi({
-    title: "ExerciseTypeCreateBody",
+    title: 'ExerciseTypeCreateBody'
   });
 const exerciseTypeUpdateSchema = z
   .object({
@@ -37,17 +37,17 @@ const exerciseTypeUpdateSchema = z
     favorite: z.boolean().optional(),
     description: z.string().optional(),
     restTime: z.number().optional(),
-    muscleGroups: z.array(z.string()).optional(),
+    muscleGroups: z.array(z.string()).optional()
   })
   .strict()
   .openapi({
-    title: "ExerciseTypeUpdateBody",
+    title: 'ExerciseTypeUpdateBody'
   });
 
-export const exerciseTypeContract = createCrudContract("exercise-type", {
+export const exerciseTypeContract = createCrudContract('exercise-type', {
   base: exerciseTypeSchema,
   create: exerciseTypeCreateSchema,
-  update: exerciseTypeUpdateSchema,
+  update: exerciseTypeUpdateSchema
 });
 
 export type ExerciseTypeModel = CreateUserCrudModel<{

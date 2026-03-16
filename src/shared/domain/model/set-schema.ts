@@ -1,9 +1,9 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const setSchema = z
   .object({
     weight: z.number(),
     repeatCount: z.number(),
-    done: z.boolean(),
+    done: z.boolean()
   })
   .strict();

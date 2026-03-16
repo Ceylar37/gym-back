@@ -1,7 +1,7 @@
-import { validateParams } from "../utils/request/validate-params";
+import { validateParams } from '../utils/request/validate-params';
 
-import { NextRequest, NextResponse } from "next/server";
-import z, { ZodSchema } from "zod";
+import { NextRequest, NextResponse } from 'next/server';
+import z, { ZodSchema } from 'zod';
 
 export type RequestWithParams<Request extends NextRequest> = Request & {
   getParams: () => z.infer<ZodSchema>;
