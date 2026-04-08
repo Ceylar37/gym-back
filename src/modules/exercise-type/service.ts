@@ -2,8 +2,6 @@ import { BaseError } from '@/shared/base/base-error';
 import { ErrorCode } from '@/shared/base/error-code';
 import { UserCrudService } from '@/shared/user-crud/user-crud.service';
 
-import { UserService } from '../user/user.service';
-
 import { ExerciseTypeModel } from './model';
 
 const select = {
@@ -12,20 +10,21 @@ const select = {
   favorite: true,
   description: true,
   restTime: true,
-  muscleGroups: true
+  muscleGroups: true,
+  units: true
 };
 
 export class ExerciseTypeService extends UserCrudService<ExerciseTypeModel> {
-  constructor(
-    private readonly exerciseTypeModel: typeof prisma.exerciseType,
-    private readonly userService: UserService
-  ) {
+  constructor(private readonly exerciseTypeModel: typeof prisma.exerciseType) {
     super(exerciseTypeModel, select);
   }
 
   async create(data: ExerciseTypeModel['createArgs']) {
     return await this.exerciseTypeModel.create({
-      data,
+      data: {
+        ...data,
+        units: data.units
+      },
       select
     });
   }

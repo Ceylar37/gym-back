@@ -13,7 +13,8 @@ const exerciseTypeSchema = z
     favorite: z.boolean(),
     description: z.string(),
     restTime: z.number(),
-    muscleGroups: z.array(z.string())
+    muscleGroups: z.array(z.string()),
+    units: z.array(z.string())
   })
   .openapi({
     title: 'ExerciseType'
@@ -24,7 +25,8 @@ const exerciseTypeCreateSchema = z
     favorite: z.boolean().optional(),
     description: z.string().optional(),
     restTime: z.number().optional(),
-    muscleGroups: z.array(z.string()).optional()
+    muscleGroups: z.array(z.string()).optional(),
+    units: z.array(z.string()).optional()
   })
   .strict()
   .openapi({
@@ -37,7 +39,8 @@ const exerciseTypeUpdateSchema = z
     favorite: z.boolean().optional(),
     description: z.string().optional(),
     restTime: z.number().optional(),
-    muscleGroups: z.array(z.string()).optional()
+    muscleGroups: z.array(z.string()).optional(),
+    units: z.array(z.string()).optional()
   })
   .strict()
   .openapi({
