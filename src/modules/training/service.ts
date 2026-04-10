@@ -16,7 +16,8 @@ const select = {
       favorite: true,
       description: true,
       restTime: true,
-      muscleGroups: true
+      muscleGroups: true,
+      units: true
     }
   }
 };
