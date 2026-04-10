@@ -44,8 +44,10 @@ export class ActiveTrainingService extends BaseService {
             restTime: exerciseType.restTime,
             sets: [
               {
-                repeatCount: 0,
-                weight: 0,
+                units: exerciseType.units.map((unit) => ({
+                  name: unit, 
+                  value:0,
+                })), 
                 done: false
               }
             ],
