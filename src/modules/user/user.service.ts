@@ -22,7 +22,7 @@ const PRIVATE_KEYS = {
 };
 
 const LIFE_TIMES = {
-  [Token.Access]: '1m',
+  [Token.Access]: '30m',
   [Token.Refresh]: '30d'
 } as const;
 
